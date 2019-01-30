@@ -1,0 +1,22 @@
+Package: ROCit
+Type: Package
+Title: Performance Assessment of Binary Classifier with Visualization
+Version: 1.1.1
+Date: 2019-01-21
+Authors@R: c(person("Md Riaz Ahmed", "Khan", email = "mdriazahmed.khan@jacks.sdstate.edu", role = c("aut", "cre")),
+    person("Thomas", "Brandenburger", email = "thomas.brandenburger@sdstate.edu", role = "aut" ))
+Description: Sensitivity (or recall or true positive rate), false positive rate, specificity, precision (or positive predictive value), negative predictive value, misclassification rate, accuracy, F-score- these are popular metrics for assessing performance of binary classifier for certain threshold. These metrics are calculated at certain threshold values. Receiver operating characteristic (ROC) curve is a common tool for assessing overall diagnostic ability of the binary classifier. Unlike depending on a certain threshold, area under ROC curve (also known as AUC), is a summary statistic about how well a binary classifier performs overall for the classification task. ROCit package provides flexibility to easily evaluate threshold-bound metrics. Also, ROC curve, along with AUC, can be obtained using different methods, such as empirical, binormal and non-parametric. ROCit encompasses a wide variety of methods for constructing confidence interval of ROC curve and AUC. ROCit also features the option of constructing empirical gains table, which is a handy tool for direct marketing. The package offers options for commonly used visualization, such as, ROC curve, KS plot, lift plot. Along with in-built default graphics setting, there are rooms for manual tweak by providing the necessary values as function arguments. ROCit is a powerful tool offering a range of things, yet it is very easy to use. 
+Imports: stats, graphics
+License: GPL-3
+Encoding: UTF-8
+LazyData: true
+RoxygenNote: 6.1.0
+Suggests: testthat, knitr, rmarkdown
+VignetteBuilder: knitr
+NeedsCompilation: no
+Packaged: 2019-01-21 16:38:04 UTC; Riaz
+Author: Md Riaz Ahmed Khan [aut, cre],
+  Thomas Brandenburger [aut]
+Maintainer: Md Riaz Ahmed Khan <mdriazahmed.khan@jacks.sdstate.edu>
+Repository: CRAN
+Date/Publication: 2019-01-30 23:23:35 UTC

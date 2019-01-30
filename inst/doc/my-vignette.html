@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Md Riaz Ahmed Khan" />
+
+<meta name="date" content="2019-01-21" />
+
+<title>ROCit: An R Package for Performance Assessment of Binary Classifier with Visualization</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">ROCit: An R Package for Performance Assessment of Binary Classifier with Visualization</h1>
+<h4 class="author"><em>Md Riaz Ahmed Khan</em></h4>
+<h4 class="date"><em>2019-01-21</em></h4>
+
+
+
+<div id="introduction" class="section level1">
+<h1>Introduction</h1>
+<p>Sensitivity (or recall or true positive rate), false positive rate, specificity, precision (or positive predictive value), negative predictive value, misclassification rate, accuracy, F-score- these are popular metrics for assessing performance of binary classifier for certain threshold. These metrics are calculated at certain threshold values. Receiver operating characteristic (ROC) curve is a common tool for assessing overall diagnostic ability of the binary classifier. Unlike depending on a certain threshold, area under ROC curve (also known as AUC), is a summary statistic about how well a binary classifier performs overall for the classification task. ROCit package provides flexibility to easily evaluate threshold-bound metrics. Also, ROC curve, along with AUC can be obtained using different methods, such as empirical, binormal and non-parametric. ROCit encompasses a wide variety of methods for constructing confidence interval of ROC curve and AUC. ROCit also features the option of constructing empirical gains table, which is a handy tool for direct marketing. The package offers options for commonly used visualization, such as, ROC curve, KS plot, lift plot. Along with in-built default graphics setting, there are rooms for manual tweak by providing the necessary values as function arguments. ROCit is a powerful tool offering a range of things, yet it is very easy to use.</p>
+<hr />
+</div>
+<div id="binary-classifier" class="section level1">
+<h1>Binary Classifier</h1>
+<p>In statistics and machine learning arena, classification is a problem of labeling an observation from a finite number of possible classes. Binary classification is a special case of classification problem, where the number of possible labels is two. It is a task of labeling an observation from two possible labels. The dependent variable represents one of two conceptually opposed values (often coded with 0 and 1), for example:</p>
+<ul>
+<li>the outcome of an experiment- pass (1) or fail (0)</li>
+<li>the response of a question- yes (1) or no (0)</li>
+<li>presence of some feature- absent (0) or present (1)</li>
+</ul>
+<p>There are many algorithms that can be used to predict binary response. Some of the widely used techniques are logistic regression, discriminant analysis, Naive Bayes classification, decision tree, random forest, neural network, support vector machines <span class="citation">(James et al. 2013)</span>, etc. In general, the algorithms model the probability of one of the two events to occur, for the certain values of the covariates, which in mathematical terms can be expressed as <span class="math inline">\(Pr(Y=1|X_1=x_1, X_2=x_2,\dots,X_n=x_n)\)</span>. Certain threshold can then be applied to convert the probabilities into classes.</p>
+</div>
+<div id="binary-classifier-performance-metrics" class="section level1">
+<h1>Binary Classifier Performance Metrics</h1>
+<div id="hard-classification" class="section level2">
+<h2>Hard Classification</h2>
+<p>When hard classification are made, (after converting the probabilities using threshold or returned by the algorithm), there can be four cases for a certain observation:</p>
+<ol style="list-style-type: decimal">
+<li><p>The response actually negative, the algorithm predicts it to be negative. This is known as true negative (TN).</p></li>
+<li><p>The response actually negative, the algorithm predicts it to be positive. This is known as false positive (FP).</p></li>
+<li><p>The response actually positive, the algorithm predicts it to be positive. This is known as true positive (TP).</p></li>
+<li><p>The response actually positive, the algorithm predicts it to be negative. This is known as false negative (FN).</p></li>
+</ol>
+<p>All the observations fall into one of the four categories stated above and form a confusion matrix.</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Predicted Negative (0)</th>
+<th align="center">Predicted Positive (1)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Actual Negative (0)</strong></td>
+<td>True Negative (TN)</td>
+<td align="center">False Positive (FP)</td>
+</tr>
+<tr class="even">
+<td><strong>Actual Positive (1)</strong></td>
+<td>False Negative (FN)</td>
+<td align="center">True Positive (TP)</td>
+</tr>
+</tbody>
+</table>
+<p>Following are some popular performance metrics, when observations are hard classified:</p>
+<ul>
+<li><p><strong>Misclassification:</strong> Misclassification rate, or error rate is the most common metric used to quantify a binary classifier. This is the probability that the classifier makes a wrong prediction, which can be expressed as: <span class="math display">\[
+Misclassification\ rate=Pr(\hat{Y}\neq Y)=\frac{FN+FP}{TN+FN+TP+FP}
+\]</span></p></li>
+<li><p><strong>Accuracy:</strong> This simply accounts for the number of correct classifications made. <span class="math display">\[
+Accuracy = Pr(\hat{Y}=Y)=1-Misclassification\ rate
+\]</span></p></li>
+<li><p><strong>Sensitivity:</strong> Sensitivity measures the proportion of the positive responses that are correctly identified as positive by the classifier <span class="citation">(Altman and Bland 1994a)</span>. In other words, it is the true positive rate and can be calculated directly from the entries of confusion matrix. <span class="math display">\[
+Sensitivity=Pr(\hat{Y}=1|Y=1)=\frac{TP}{TP+FN}
+\]</span> Other terms used to represent the same metric are true positive rate (TPR), recall. The term sensitivity is popular in medical test <span class="citation">(Altman and Bland 1994b)</span>. In the credit world the use of the term TPR has been noticed <span class="citation">(Siddiqi 2012)</span>. While in machine learning, natural language processing, use of recall is common <span class="citation">(Nguyen and Armitage 2006; Denecke 2008; Bermingham and Smeaton 2011, @huang2009analyzing)</span></p></li>
+<li><p><strong>Specificity:</strong> Specificity measures the proportion of the negative responses that are correctly identified as negative by the classifier <span class="citation">(Altman and Bland 1994a)</span>. In other words, it is the true negative rate and can be calculated directly from the entries of confusion matrix. <span class="math display">\[
+Specificity=Pr(\hat{Y}=0|Y=0)=\frac{TN}{TN+FP}
+\]</span></p></li>
+</ul>
+<p>Specificity is also known as true negative rate (TNR).</p>
+<ul>
+<li><p><strong>Positive predictive value (PPV):</strong> Positive predictive value (PPV) is the probability that an observation classified as positive is truly positive. It can be calculated from the entries of confusion matrix: <span class="math display">\[
+PPV=Pr(Y=1|\hat{Y}=1)=\frac{TP}{TP+FP}
+\]</span></p></li>
+<li><p><strong>Negative predictive value (NPV):</strong> Negative predictive value (NPV) is the probability that an observation classified as negative is truly negative. It can be calculated from the entries of confusion matrix. <span class="math display">\[
+NPV=Pr(Y=0|\hat{Y}=0)=\frac{TN}{TN+FN}
+\]</span></p></li>
+<li><p><strong>Diagnostic likelihood ratio (DLR):</strong> Likelihood ratio is another form of accuracy measure of a binary classifier. This is a ratio. From true statistical sense, this ratio is a likelihood ratio, but in the context of accuracy measure, this is called diagnostic likelihood ratio (DLR) <span class="citation">(Pepe 2003)</span>. There are two kinds of DLR metrics are defined:</p></li>
+</ul>
+<p><span class="math display">\[Positive\ DLR=\frac{TPR}{FPR}\]</span> <span class="math display">\[Negative\ DLR=\frac{TNR}{FNR}\]</span></p>
+<ul>
+<li><strong>F-Score:</strong> F-Score (also known as F-measure, F1 -Score) is another metric which is used to assess the performance of a binary classifier. It is often used in information theory, to assess search, document classification, and query classification performance <span class="citation">(Beitzel et al. 2007)</span>. It is defines as the harmonic mean of precision (Positive predictive value, PPV) and recall (True positive rate, TPR).</li>
+</ul>
+<p><span class="math display">\[
+    F\text{-}Score=\frac{2}{\frac{1}{PPV} +\frac{1}{TPR}}=2\times \frac{PPV\times TPR}{PPV+TPR}
+\]</span></p>
+</div>
+<div id="observation-are-scored" class="section level2">
+<h2>Observation Are Scored</h2>
+<p>Rather than making simple classification, often models give probability scores, <span class="math inline">\(Pr(Y=1)\)</span>. Using certain cutoff or threshold values, we can dichotomize the scores and calculate these metrics. This is also true when some certain diagnostic variable is used to categorize the observations. For example, having a hemoglobin A1c level of lower than 6.5% being treated as no diabetes, and having a level equal to greater than 6.5% being treated as having the disease. Here the diagnostic measure is not bound in between 0 and 1 like the probability measure, yet all the metrics stated above can be derived. But these metrics give a sense of performance measure only at certain threshold. There are metrics, that measure overall performance of the binary classifier considering the performance at all possible thresholds. Two such metrics are</p>
+<ol style="list-style-type: decimal">
+<li>Area under receiver operating characteristic (ROC) curve</li>
+<li>KS statistic</li>
+</ol>
+<p>Receiver operating characteristic (ROC) curve <span class="citation">(Lusted 1971, @hanley1982meaning, @bewick2004statistics)</span> is a simple yet powerful tool used to evaluate a binary classifier quantitatively. The most common quantitative measure is the area under the curve <span class="citation">(Hanley and McNeil 1982)</span>. ROC curve is drawn by plotting the sensitivity (TPR) along <span class="math inline">\(Y\)</span> axis and corresponding 1-specificity (FPR) along <span class="math inline">\(X\)</span> axis for all possible cutoff values. Mathematically, it is the set of all ordered pairs <span class="math inline">\((FPR(c), TPR(c))\)</span>, where <span class="math inline">\(c\in R\)</span>.</p>
+<p><strong>Some Properties of ROC curve</strong></p>
+<ul>
+<li><p>ROC curve is a monotonically increasing function, defined in the <span class="math inline">\((+,+)\)</span> quadrant.</p></li>
+<li><p>ROC curve is that it is invariant of strictly increasing transformation of the diagnostic variable, when estimated empirically.</p></li>
+<li><p>The ROC curve always contains <span class="math inline">\((0,0)\)</span> and <span class="math inline">\((1,1)\)</span>. These are the extreme points when the threshold is set to <span class="math inline">\(+\infty\)</span> and <span class="math inline">\(-\infty\)</span>.</p></li>
+</ul>
+<p>If the diagnostic variable is unrelated with the binary outcome, the expected ROC curve is simply the <span class="math inline">\(y=x\)</span> line. In a situation where the diagnostic variable can perfectly separate the two classes, the ROC curve consists of a vertical line (<span class="math inline">\(x=0\)</span>) and a horizontal line (<span class="math inline">\(y=1\)</span>). For a practical data, usually the ROC stays in between these two extreme scenarios. Figure below illustrates some examples of different types of ROC curves. The red and the green curves illustrate two extreme scenarios. The random line in red is the expected ROC curve when the diagnostic variable does not have any predictive power. When the observations are perfectly separable, the ROC curve consists of one horizontal and a vertical line as shown in green. The other curves are the result of typical practical data. When the curve shifts more to the north-west, it means better the predictive power.</p>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="ROC curves example" />
+<p class="caption">ROC curves example</p>
+</div>
+<p>For more details, see <span class="citation">Pepe (2003)</span>.</p>
+<div id="common-approaches-to-estimate-roc-curve" class="section level3">
+<h3>Common approaches to estimate ROC curve</h3>
+<ul>
+<li><strong>Empirical:</strong> The empirical method simply constructs the ROC curve empirically, applying the definitions of TPR and FPR to the observed data. Figure 1 is an example of such approach. For every possible cutoff value c, TPR and FPR are estimated by:</li>
+</ul>
+<p><span class="math display">\[
+\hat{TPR}(c)=\sum_{i=1}^{n_Y}I(D_{Y_i}\geq c)/n_Y
+\]</span></p>
+<p><span class="math display">\[
+\hat{FPR}(c)=\sum_{j=1}^{n_{\bar{Y}}}I(D_{{\bar{Y}}_j}\geq c)/n_{\bar{Y}}
+\]</span> where, <span class="math inline">\(Y\)</span> and <span class="math inline">\(\bar{Y}\)</span> represent the positive and negative responses, <span class="math inline">\(n_Y\)</span> and <span class="math inline">\(n_{\bar{Y}}\)</span> are the total number of positive and negative responses, <span class="math inline">\(D_Y\)</span> and <span class="math inline">\(D_{\bar{Y}}\)</span> are the distributions of the diagnostic variable in the positive and the negative responses. The indicator function has the usual meaning. It evaluates 1 if the expression is true, and 0 otherwise. The area under empirically estimated ROC curve is given by:</p>
+<p><span class="math display">\[
+\hat{AUC}=\frac{1}{n_Yn_{\bar{Y}}}
+\sum_{i=1}^{n_Y}\sum_{j=1}^{n_{\bar{Y}}}
+(I(D_{Y_i}&gt;D_{Y_j})+
+\frac{1}{2}I(D_{Y_i}&gt;D_{Y_j}))
+\]</span> The variance of AUC can be estimated as <span class="citation">(Hanley and McNeil 1982)</span>: <span class="math display">\[
+V(AUC)=\frac{1}{n_Yn_{\bar{Y}}}(
+AUC(1-AUC) + (n_Y-1)(Q_1-AUC^2) + (n_{\bar{Y}}-1)(Q_2-AUC^2) 
+)
+\]</span> where, <span class="math inline">\(Q_1=\frac{AUC}{2-AUC}\)</span>, and <span class="math inline">\(Q_2=\frac{2\times AUC^2}{1+AUC}\)</span>.</p>
+<p>An alternate formula is developed by <span class="citation">DeLong, DeLong, and Clarke-Pearson (1988)</span> which is given in terms of survivor functions: <span class="math display">\[
+ V(AUC)=\frac{V(S_{D_{\bar{Y}}}(D_Y))}{n_Y}
+ +\frac{V(S_{D_Y}(D_{\bar{Y}}))}{n_{\bar{Y}}}
+ \]</span></p>
+<p>A confidence band can be computed using the usual approach of normal assumption. For example, a <span class="math inline">\((1-\alpha)\times 100\%\)</span> confidence band can be constructed using:</p>
+<p><span class="math display">\[
+AUC\pm\phi^{-1}(1-\alpha/2)\sqrt{V(AUC)}
+\]</span></p>
+<p>The above formula does not put any restriction on the computed values of upper and lower bound. However, AUC is a measure bounded between 0 and 1. One systematic way to do this is the logit transformation <span class="citation">(Pepe 2003)</span>. Instead of constructing the interval directly for the AUC, an interval in the logit scale is first constructed using:</p>
+<p><span class="math display">\[
+L_{AUC}\pm \phi^{-1}(1-\alpha/2)\frac{\sqrt{AUC}}{AUC(1-AUC)}
+\]</span></p>
+<p>where <span class="math inline">\(L_{AUC}=log(\frac{AUC}{1-AUC})\)</span> is the logit of AUC. The logit scale intervals can then be inverse logit transformed to find the actual bounds of AUC.</p>
+<p><em>Confidence interval of ROC curve:</em> For large values of <span class="math inline">\(n_Y\)</span> and <span class="math inline">\(n_{\bar{Y}}\)</span>, the distribution of <span class="math inline">\(TPR(c)\)</span> at <span class="math inline">\(FPR(c)\)</span> can be approximated as a normal distribution with following mean and variance:</p>
+<p><span class="math display">\[
+\mu_{TPR(c)}=\sum_{i=1}^{n_Y}I(D_{Y_i}\geq c)/n_Y
+\]</span></p>
+<p><span class="math display">\[
+V \Big( TPR(c) \Big)=   \frac{  TPR(c) \Big( 1-  TPR(c)\Big)  }{n_Y}
+    + \bigg( \frac{g(c^*)}{f(c^*) } \bigg)^2\times K
+\]</span> where, <span class="math display">\[
+K=\frac{ FPR(c) \Big(1-FPR(c)\Big)}{n_{\bar{Y}} }       
+\]</span></p>
+<p><span class="math display">\[
+c^*=S^{-1}_{D_{\bar{ Y}}}\Big( FPR(c) \Big)
+\]</span> and, <span class="math inline">\(S\)</span> is the survival function given by, <span class="math display">\[
+S(t)=P\Big(T&gt;t\Big)=\int_t^{\infty}f_T(t)dt=1-F(t)
+\]</span> For details, see <span class="citation">Pepe (2003)</span>.</p>
+<ul>
+<li><strong>Binormal:</strong> This is a parametric approach where the diagnostic variable in the two groups are assumed to be normal.</li>
+</ul>
+<p><span class="math display">\[
+D_Y\sim N(\mu_{D_Y}, \sigma_{D_Y}^2)
+\]</span></p>
+<p><span class="math display">\[
+D_{\bar{Y}}\sim N(\mu_{D_{\bar{Y}}}, \sigma_{D_{\bar{Y}}}^2)
+\]</span></p>
+<p>When such distributional assumptions are made, ROC curve can be defined as:</p>
+<p><span class="math display">\[
+y(x)=1-G(F^{-1}(1-x)), \ \ 0\leq x\leq 1
+\]</span> where by <span class="math inline">\(F\)</span> and <span class="math inline">\(G\)</span> are the cumulative density functions of the diagnostic score in the negative and positive groups respectively, with <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> being corresponding probability density functions. For normal condition, the ROC curve and AUC under curve are given by:</p>
+<p><span class="math display">\[
+ROC\ Curve: y= \phi(A+BZ_x)
+\]</span></p>
+<p><span class="math display">\[
+AUC=\phi(\frac{A}{\sqrt{1+B^2}})
+\]</span></p>
+<p>where, <span class="math inline">\(Z_x=\phi^{-1}(x(t))=\frac{\mu_{D_{\bar{Y}}}-t}{\sigma_{D_{\bar{Y}}}}\)</span>, <span class="math inline">\(t\)</span> being a cutoff; and <span class="math inline">\(A=\frac{|\mu_{D_{{Y}}}-\mu_{D_{\bar{Y}}}|}{\sigma_{D_{{Y}}}}\)</span>, <span class="math inline">\(B=\frac{\sigma_{D_{\bar{Y}}}}{\sigma_{D_{{Y}}}}\)</span>.</p>
+<p><em>Confidence interval of ROC curve:</em> To get the confidence interval, variance of <span class="math inline">\(A+BZ_x\)</span> is derived using:</p>
+<p><span class="math display">\[
+V(A+B Z_x)=V(A)+Z_x^2V(B)+2Z_xCov(A, B)
+\]</span> A <span class="math inline">\((1-\alpha)\times100\%\)</span> level confidence limit for <span class="math inline">\(A+Z_xB\)</span> can be obtained as</p>
+<p><span class="math display">\[
+(A+Z_xB)\pm \phi^{-1}(1-\alpha/2)\sqrt{V(A+Z_xB)}
+\]</span> Point-wise confidence limit can be achieved by taking <span class="math inline">\(\phi\)</span> of the above expression.</p>
+<ul>
+<li><strong>Non-parametric:</strong> Non-parametric estimates of <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span> are used in this approach. <span class="citation">Zou, Hall, and Shapiro (1997)</span> presented one such approach using Kernel densities:</li>
+</ul>
+<p><span class="math display">\[
+    \hat{f}(x)=\frac{1}{n_{\bar{Y}}h_{\bar{ Y}}}\sum_{i=1}^{n_{\bar{ Y}}}
+    K\big( \frac{x-D_{\bar{ Y}i} }{h_{\bar{ Y}}}  \big)
+\]</span></p>
+<p><span class="math display">\[
+\hat{g}(x)=  \frac{1}{n_{{Y}}h_y}\sum_{i=1}^{n_{{ Y}}}
+    K\big( \frac{x-D_{{ Y}i} }{h_Y}  \big)
+\]</span></p>
+<p>where <span class="math inline">\(K\)</span> is the Kernel function and <span class="math inline">\(h\)</span> smoothing parameter (bandwidth). <span class="citation">Zou, Hall, and Shapiro (1997)</span> suggested a biweight Kernel:</p>
+<p><span class="math display">\[
+    K\big(\frac{x-\alpha}{\beta}\big)=\begin{cases}
+    \frac{15}{16}  \Big[  1-\big(\frac{x-\alpha}{\beta}\big)^2  \Big] 
+    , &amp;  x\in  (\alpha - \beta, \alpha + \beta)\\
+    0, &amp; \text{otherwise}
+    \end{cases}
+\]</span></p>
+<p>with the bandwidth given by, <span class="math display">\[
+h_{\bar{Y}}=0.9\times min\big(  \sigma_{\bar{ Y}}, \frac{IQR(D_{\bar{ Y}})}{1.34}   \big)/ (n_{\bar{ Y}} )^{\frac{1}{5}}
+\]</span> <span class="math display">\[
+        h_{{Y}}=0.9\times min\big(  \sigma_{{ Y}}, \frac{IQR(D_{{ Y}})}{1.34}   \big)/ (n_{{ Y}} )^{\frac{1}{5}}
+\]</span></p>
+<p>Smoother versions of TPR and FPR are obtained as the right-hand side area (of cutoff) of the smoothed <span class="math inline">\(f\)</span> and <span class="math inline">\(g\)</span>. That is,</p>
+<p><span class="math display">\[
+\hat{TPR}(t)=1-\int_{-\infty}^{t}\hat{g}(t)dt=1-\hat{G}(t)
+\]</span></p>
+<p><span class="math display">\[
+\hat{FPR}(t)=1-\int_{-\infty}^{t}\hat{f}(t)dt=1-\hat{F}(t)
+\]</span> When discrete pairs of <span class="math inline">\((FPR, TPR)\)</span> are obtained, trapezoidal rule can be applied to calculate the AUC.</p>
+</div>
+</div>
+</div>
+<div id="using-package-rocit" class="section level1">
+<h1>Using Package ROCit</h1>
+<div id="coding-of-response" class="section level2">
+<h2>1/0 coding of response</h2>
+<p>A binary response can exist as factor, character, or numerics other than 1 and 0. Often it is desired to have the response coded with just 1/0. This makes many calculations easier.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1"><span class="kw">library</span>(ROCit)</a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">data</span>(<span class="st">&quot;Loan&quot;</span>)</a>
+<a class="sourceLine" id="cb1-3" title="3"></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="co"># check the class variable</span></a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="kw">summary</span>(Loan<span class="op">$</span>Status)</a>
+<a class="sourceLine" id="cb1-6" title="6"><span class="co">#&gt;  CO  FP </span></a>
+<a class="sourceLine" id="cb1-7" title="7"><span class="co">#&gt; 131 769</span></a>
+<a class="sourceLine" id="cb1-8" title="8"><span class="kw">class</span>(Loan<span class="op">$</span>Status)</a>
+<a class="sourceLine" id="cb1-9" title="9"><span class="co">#&gt; [1] &quot;factor&quot;</span></a></code></pre></div>
+<p>So the response is a factor variable. There are 131 cases of charged off and 769 cases of fully paid. Often the probability of defaulting is modeled in loan data, making the fully paid group as reference.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1">Simple_Y &lt;-<span class="st"> </span><span class="kw">convertclass</span>(<span class="dt">x =</span> Loan<span class="op">$</span>Status, <span class="dt">reference =</span> <span class="st">&quot;FP&quot;</span>) </a>
+<a class="sourceLine" id="cb2-2" title="2"></a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="co"># charged off rate</span></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="kw">mean</span>(Simple_Y)</a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="co">#&gt; [1] 0.1455556</span></a></code></pre></div>
+<p>If reference not specified, alphabetically, charged off group is set as reference.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">mean</span>(<span class="kw">convertclass</span>(<span class="dt">x =</span> Loan<span class="op">$</span>Status))</a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co">#&gt; [1] 0.8544444</span></a></code></pre></div>
+</div>
+<div id="performance-metrics-of-binary-classifier" class="section level2">
+<h2>Performance metrics of binary classifier</h2>
+<p>Various performance metrics for binary classifier are available that are cutoff specific. Following metrics can be called for via measure argument:</p>
+<ul>
+<li><code>ACC</code>: Overall accuracy of classification.</li>
+<li><code>MIS</code>: Misclassification rate.</li>
+<li><code>SENS</code>: Sensitivity.</li>
+<li><code>SPEC</code>: Specificity.</li>
+<li><code>PREC</code>: Precision.</li>
+<li><code>REC</code>: Recall. Same as sensitivity.</li>
+<li><code>PPV</code>: Positive predictive value.</li>
+<li><code>NPV</code>: Positive predictive value.</li>
+<li><code>TPR</code>: True positive rate.</li>
+<li><code>FPR</code>: False positive rate.</li>
+<li><code>TNR</code>: True negative rate.</li>
+<li><code>FNR</code>: False negative rate.</li>
+<li><code>pDLR</code>: Positive diagnostic likelihood ratio.</li>
+<li><code>nDLR</code>: Negative diagnostic likelihood ratio.</li>
+<li><code>FSCR</code>: F-score,.</li>
+</ul>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1"><span class="kw">data</span>(<span class="st">&quot;Diabetes&quot;</span>)</a>
+<a class="sourceLine" id="cb4-2" title="2">logistic.model &lt;-<span class="st"> </span><span class="kw">glm</span>(<span class="kw">as.factor</span>(dtest)<span class="op">~</span>chol<span class="op">+</span>age<span class="op">+</span>bmi,</a>
+<a class="sourceLine" id="cb4-3" title="3">                      <span class="dt">data =</span> Diabetes,<span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>)</a>
+<a class="sourceLine" id="cb4-4" title="4">class &lt;-<span class="st"> </span>logistic.model<span class="op">$</span>y</a>
+<a class="sourceLine" id="cb4-5" title="5">score &lt;-<span class="st"> </span>logistic.model<span class="op">$</span>fitted.values</a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="co"># -------------------------------------------------------------</span></a>
+<a class="sourceLine" id="cb4-7" title="7">measure &lt;-<span class="st"> </span><span class="kw">measureit</span>(<span class="dt">score =</span> score, <span class="dt">class =</span> class,</a>
+<a class="sourceLine" id="cb4-8" title="8">                     <span class="dt">measure =</span> <span class="kw">c</span>(<span class="st">&quot;ACC&quot;</span>, <span class="st">&quot;SENS&quot;</span>, <span class="st">&quot;FSCR&quot;</span>))</a>
+<a class="sourceLine" id="cb4-9" title="9"><span class="kw">names</span>(measure)</a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="co">#&gt; [1] &quot;Cutoff&quot; &quot;Depth&quot;  &quot;TP&quot;     &quot;FP&quot;     &quot;TN&quot;     &quot;FN&quot;     &quot;ACC&quot;    &quot;SENS&quot;  </span></a>
+<a class="sourceLine" id="cb4-11" title="11"><span class="co">#&gt; [9] &quot;FSCR&quot;</span></a>
+<a class="sourceLine" id="cb4-12" title="12"><span class="kw">plot</span>(measure<span class="op">$</span>ACC<span class="op">~</span>measure<span class="op">$</span>Cutoff, <span class="dt">type =</span> <span class="st">&quot;l&quot;</span>)</a></code></pre></div>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="Accuracy vs Cutoff" />
+<p class="caption">Accuracy vs Cutoff</p>
+</div>
+</div>
+<div id="roc-curve-estimation" class="section level2">
+<h2>ROC curve estimation</h2>
+<p><code>rocit</code> is the main function of ROCit package. With the diagnostic score and the class of each observation, it calculates true positive rate (sensitivity) and false positive rate (1-Specificity) at convenient cutoff values to construct ROC curve. The function returns “rocit” object, which can be passed as arguments for other S3 methods.</p>
+<p><code>Diabetes</code> data contains information on 403 subjects from 1046 subjects who were interviewed in a study to understand the prevalence of obesity, diabetes, and other cardiovascular risk factors in central Virginia for African Americans. According to Dr John Hong, Diabetes Mellitus Type II (adult onset diabetes) is associated most strongly with obesity. The waist/hip ratio may be a predictor in diabetes and heart disease. DM II is also associated with hypertension - they may both be part of “Syndrome X”. The 403 subjects were the ones who were actually screened for diabetes. Glycosolated hemoglobin &gt; 7.0 is usually taken as a positive diagnosis of diabetes.</p>
+<p>In the data, the <code>dtest</code> variable indicates whether <code>glyhb</code> is greater than 7 or not.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">data</span>(<span class="st">&quot;Diabetes&quot;</span>)</a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="kw">summary</span>(Diabetes<span class="op">$</span>dtest)</a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="co">#&gt;    Length     Class      Mode </span></a>
+<a class="sourceLine" id="cb5-4" title="4"><span class="co">#&gt;       403 character character</span></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="kw">summary</span>(<span class="kw">as.factor</span>(Diabetes<span class="op">$</span>dtest))</a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="co">#&gt;    +    - NA&#39;s </span></a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="co">#&gt;   60  330   13</span></a></code></pre></div>
+<p>The variable is a character variable in the dataset. There are 60 positive and 330 negative instances. There are also 13 instances of NAs.</p>
+<p>Now let us use the total cholesterol as a diagnostic measure of having the disease.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">roc_empirical &lt;-<span class="st"> </span><span class="kw">rocit</span>(<span class="dt">score =</span> Diabetes<span class="op">$</span>chol, <span class="dt">class =</span> Diabetes<span class="op">$</span>dtest,</a>
+<a class="sourceLine" id="cb6-2" title="2">                       <span class="dt">negref =</span> <span class="st">&quot;-&quot;</span>) </a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="co">#&gt; removing NA(s) from score and/or class</span></a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="co">#&gt; NA(s) removed</span></a></code></pre></div>
+<p>The negative was taken as the reference group in <code>rocit</code> function. No method was specified, by default <code>empirical</code> was used.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1"><span class="kw">class</span>(roc_empirical)</a>
+<a class="sourceLine" id="cb7-2" title="2"><span class="co">#&gt; [1] &quot;rocit&quot;</span></a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="kw">methods</span>(<span class="dt">class=</span><span class="st">&quot;rocit&quot;</span>)</a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="co">#&gt; [1] ciAUC      ciROC      gainstable ksplot     measureit  plot      </span></a>
+<a class="sourceLine" id="cb7-5" title="5"><span class="co">#&gt; [7] summary   </span></a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="co">#&gt; see &#39;?methods&#39; for accessing help and source code</span></a></code></pre></div>
+<p>The <code>summary</code> method is available for a <code>rocit</code> object.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1"><span class="kw">summary</span>(roc_empirical)</a>
+<a class="sourceLine" id="cb8-2" title="2"><span class="co">#&gt;                                       </span></a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="co">#&gt;  Empirical ROC curve                  </span></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="co">#&gt;  Number of postive responses :  60    </span></a>
+<a class="sourceLine" id="cb8-5" title="5"><span class="co">#&gt;  Number of negative responses :  329  </span></a>
+<a class="sourceLine" id="cb8-6" title="6"><span class="co">#&gt;  Area under curve :  0.652684903748734</span></a>
+<a class="sourceLine" id="cb8-7" title="7"><span class="co"># function returns</span></a>
+<a class="sourceLine" id="cb8-8" title="8"><span class="kw">names</span>(roc_empirical)</a>
+<a class="sourceLine" id="cb8-9" title="9"><span class="co">#&gt; [1] &quot;method&quot;    &quot;pos_count&quot; &quot;neg_count&quot; &quot;pos_D&quot;     &quot;neg_D&quot;     &quot;AUC&quot;      </span></a>
+<a class="sourceLine" id="cb8-10" title="10"><span class="co">#&gt; [7] &quot;Cutoff&quot;    &quot;TPR&quot;       &quot;FPR&quot;</span></a>
+<a class="sourceLine" id="cb8-11" title="11"><span class="co"># -------</span></a>
+<a class="sourceLine" id="cb8-12" title="12"><span class="kw">message</span>(<span class="st">&quot;Number of positive responses used: &quot;</span>, roc_empirical<span class="op">$</span>pos_count)</a>
+<a class="sourceLine" id="cb8-13" title="13"><span class="co">#&gt; Number of positive responses used: 60</span></a>
+<a class="sourceLine" id="cb8-14" title="14"><span class="kw">message</span>(<span class="st">&quot;Number of negative responses used: &quot;</span>, roc_empirical<span class="op">$</span>neg_count)</a>
+<a class="sourceLine" id="cb8-15" title="15"><span class="co">#&gt; Number of negative responses used: 329</span></a></code></pre></div>
+<p>The Cutoffs are in descending order. TPR and FPR are in ascending order. The first cutoff is set to <span class="math inline">\(+\infty\)</span> and the last cutoff is equal to the lowest score in the data that are used for ROC curve estimation. A score greater or equal to the cutoff is treated as positive.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">head</span>(<span class="kw">cbind</span>(<span class="dt">Cutoff=</span>roc_empirical<span class="op">$</span>Cutoff, </a>
+<a class="sourceLine" id="cb9-2" title="2">                 <span class="dt">TPR=</span>roc_empirical<span class="op">$</span>TPR, </a>
+<a class="sourceLine" id="cb9-3" title="3">                 <span class="dt">FPR=</span>roc_empirical<span class="op">$</span>FPR))</a>
+<a class="sourceLine" id="cb9-4" title="4"><span class="co">#&gt;      Cutoff        TPR         FPR</span></a>
+<a class="sourceLine" id="cb9-5" title="5"><span class="co">#&gt; [1,]    Inf 0.00000000 0.000000000</span></a>
+<a class="sourceLine" id="cb9-6" title="6"><span class="co">#&gt; [2,]    443 0.01666667 0.000000000</span></a>
+<a class="sourceLine" id="cb9-7" title="7"><span class="co">#&gt; [3,]    404 0.03333333 0.000000000</span></a>
+<a class="sourceLine" id="cb9-8" title="8"><span class="co">#&gt; [4,]    347 0.03333333 0.003039514</span></a>
+<a class="sourceLine" id="cb9-9" title="9"><span class="co">#&gt; [5,]    342 0.05000000 0.003039514</span></a>
+<a class="sourceLine" id="cb9-10" title="10"><span class="co">#&gt; [6,]    337 0.05000000 0.006079027</span></a>
+<a class="sourceLine" id="cb9-11" title="11"></a>
+<a class="sourceLine" id="cb9-12" title="12"><span class="kw">tail</span>(<span class="kw">cbind</span>(<span class="dt">Cutoff=</span>roc_empirical<span class="op">$</span>Cutoff, </a>
+<a class="sourceLine" id="cb9-13" title="13">                 <span class="dt">TPR=</span>roc_empirical<span class="op">$</span>TPR, </a>
+<a class="sourceLine" id="cb9-14" title="14">                 <span class="dt">FPR=</span>roc_empirical<span class="op">$</span>FPR))</a>
+<a class="sourceLine" id="cb9-15" title="15"><span class="co">#&gt;        Cutoff       TPR       FPR</span></a>
+<a class="sourceLine" id="cb9-16" title="16"><span class="co">#&gt; [385,]    129 0.9666667 0.9908815</span></a>
+<a class="sourceLine" id="cb9-17" title="17"><span class="co">#&gt; [386,]    128 0.9833333 0.9908815</span></a>
+<a class="sourceLine" id="cb9-18" title="18"><span class="co">#&gt; [387,]    122 0.9833333 0.9939210</span></a>
+<a class="sourceLine" id="cb9-19" title="19"><span class="co">#&gt; [388,]    118 0.9833333 0.9969605</span></a>
+<a class="sourceLine" id="cb9-20" title="20"><span class="co">#&gt; [389,]    115 1.0000000 0.9969605</span></a>
+<a class="sourceLine" id="cb9-21" title="21"><span class="co">#&gt; [390,]     78 1.0000000 1.0000000</span></a></code></pre></div>
+<p><strong><em>Other methods:</em></strong></p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1">roc_binormal &lt;-<span class="st"> </span><span class="kw">rocit</span>(<span class="dt">score =</span> Diabetes<span class="op">$</span>chol, </a>
+<a class="sourceLine" id="cb10-2" title="2">                      <span class="dt">class =</span> Diabetes<span class="op">$</span>dtest,</a>
+<a class="sourceLine" id="cb10-3" title="3">                      <span class="dt">negref =</span> <span class="st">&quot;-&quot;</span>, </a>
+<a class="sourceLine" id="cb10-4" title="4">                      <span class="dt">method =</span> <span class="st">&quot;bin&quot;</span>) </a>
+<a class="sourceLine" id="cb10-5" title="5"><span class="co">#&gt; removing NA(s) from score and/or class</span></a>
+<a class="sourceLine" id="cb10-6" title="6"><span class="co">#&gt; NA(s) removed</span></a>
+<a class="sourceLine" id="cb10-7" title="7"></a>
+<a class="sourceLine" id="cb10-8" title="8"></a>
+<a class="sourceLine" id="cb10-9" title="9">roc_nonparametric &lt;-<span class="st"> </span><span class="kw">rocit</span>(<span class="dt">score =</span> Diabetes<span class="op">$</span>chol, </a>
+<a class="sourceLine" id="cb10-10" title="10">                           <span class="dt">class =</span> Diabetes<span class="op">$</span>dtest,</a>
+<a class="sourceLine" id="cb10-11" title="11">                           <span class="dt">negref =</span> <span class="st">&quot;-&quot;</span>, </a>
+<a class="sourceLine" id="cb10-12" title="12">                           <span class="dt">method =</span> <span class="st">&quot;non&quot;</span>) </a>
+<a class="sourceLine" id="cb10-13" title="13"><span class="co">#&gt; removing NA(s) from score and/or class</span></a>
+<a class="sourceLine" id="cb10-14" title="14"><span class="co">#&gt; NA(s) removed</span></a>
+<a class="sourceLine" id="cb10-15" title="15"></a>
+<a class="sourceLine" id="cb10-16" title="16"><span class="kw">summary</span>(roc_binormal)</a>
+<a class="sourceLine" id="cb10-17" title="17"><span class="co">#&gt;                                       </span></a>
+<a class="sourceLine" id="cb10-18" title="18"><span class="co">#&gt;  Binormal ROC curve                   </span></a>
+<a class="sourceLine" id="cb10-19" title="19"><span class="co">#&gt;  Number of postive responses :  60    </span></a>
+<a class="sourceLine" id="cb10-20" title="20"><span class="co">#&gt;  Number of negative responses :  329  </span></a>
+<a class="sourceLine" id="cb10-21" title="21"><span class="co">#&gt;  Area under curve :  0.641640040691374</span></a>
+<a class="sourceLine" id="cb10-22" title="22"><span class="kw">summary</span>(roc_nonparametric)</a>
+<a class="sourceLine" id="cb10-23" title="23"><span class="co">#&gt;                                       </span></a>
+<a class="sourceLine" id="cb10-24" title="24"><span class="co">#&gt;  Non-parametric ROC curve             </span></a>
+<a class="sourceLine" id="cb10-25" title="25"><span class="co">#&gt;  Number of postive responses :  60    </span></a>
+<a class="sourceLine" id="cb10-26" title="26"><span class="co">#&gt;  Number of negative responses :  329  </span></a>
+<a class="sourceLine" id="cb10-27" title="27"><span class="co">#&gt;  Area under curve :  0.640420316652908</span></a></code></pre></div>
+<p><strong><em>Plotting:</em></strong></p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb11-1" title="1"><span class="co"># Default plot</span></a>
+<a class="sourceLine" id="cb11-2" title="2"><span class="kw">plot</span>(roc_empirical, <span class="dt">values =</span> F)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb12-1" title="1"></a>
+<a class="sourceLine" id="cb12-2" title="2"></a>
+<a class="sourceLine" id="cb12-3" title="3"><span class="co"># Changing color</span></a>
+<a class="sourceLine" id="cb12-4" title="4"><span class="kw">plot</span>(roc_binormal, <span class="dt">YIndex =</span> F, </a>
+<a class="sourceLine" id="cb12-5" title="5">     <span class="dt">values =</span> F, <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">4</span>))</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb13-1" title="1"></a>
+<a class="sourceLine" id="cb13-2" title="2"></a>
+<a class="sourceLine" id="cb13-3" title="3"><span class="co"># Other options</span></a>
+<a class="sourceLine" id="cb13-4" title="4"><span class="kw">plot</span>(roc_nonparametric, <span class="dt">YIndex =</span> F, </a>
+<a class="sourceLine" id="cb13-5" title="5">     <span class="dt">values =</span> F, <span class="dt">legend =</span> F)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p><strong><em>Trying a better model:</em></strong></p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb14-1" title="1"><span class="co">## first, fit a logistic model</span></a>
+<a class="sourceLine" id="cb14-2" title="2">logistic.model &lt;-<span class="st"> </span><span class="kw">glm</span>(<span class="kw">as.factor</span>(dtest)<span class="op">~</span></a>
+<a class="sourceLine" id="cb14-3" title="3"><span class="st">                        </span>chol<span class="op">+</span>age<span class="op">+</span>bmi,</a>
+<a class="sourceLine" id="cb14-4" title="4">                        <span class="dt">data =</span> Diabetes,</a>
+<a class="sourceLine" id="cb14-5" title="5">                        <span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>)</a>
+<a class="sourceLine" id="cb14-6" title="6"></a>
+<a class="sourceLine" id="cb14-7" title="7"><span class="co">## make the score and class</span></a>
+<a class="sourceLine" id="cb14-8" title="8">class &lt;-<span class="st"> </span>logistic.model<span class="op">$</span>y</a>
+<a class="sourceLine" id="cb14-9" title="9"><span class="co"># score = log odds</span></a>
+<a class="sourceLine" id="cb14-10" title="10">score &lt;-<span class="st"> </span><span class="kw">logit</span>(logistic.model<span class="op">$</span>fitted.values)</a>
+<a class="sourceLine" id="cb14-11" title="11"></a>
+<a class="sourceLine" id="cb14-12" title="12"><span class="co">## rocit object</span></a>
+<a class="sourceLine" id="cb14-13" title="13">rocit_emp &lt;-<span class="st"> </span><span class="kw">rocit</span>(<span class="dt">score =</span> score, </a>
+<a class="sourceLine" id="cb14-14" title="14">                   <span class="dt">class =</span> class, </a>
+<a class="sourceLine" id="cb14-15" title="15">                   <span class="dt">method =</span> <span class="st">&quot;emp&quot;</span>)</a>
+<a class="sourceLine" id="cb14-16" title="16">rocit_bin &lt;-<span class="st"> </span><span class="kw">rocit</span>(<span class="dt">score =</span> score, </a>
+<a class="sourceLine" id="cb14-17" title="17">                   <span class="dt">class =</span> class, </a>
+<a class="sourceLine" id="cb14-18" title="18">                   <span class="dt">method =</span> <span class="st">&quot;bin&quot;</span>)</a>
+<a class="sourceLine" id="cb14-19" title="19">rocit_non &lt;-<span class="st"> </span><span class="kw">rocit</span>(<span class="dt">score =</span> score, </a>
+<a class="sourceLine" id="cb14-20" title="20">                   <span class="dt">class =</span> class, </a>
+<a class="sourceLine" id="cb14-21" title="21">                   <span class="dt">method =</span> <span class="st">&quot;non&quot;</span>)</a>
+<a class="sourceLine" id="cb14-22" title="22"></a>
+<a class="sourceLine" id="cb14-23" title="23"><span class="kw">summary</span>(rocit_emp)</a>
+<a class="sourceLine" id="cb14-24" title="24"><span class="co">#&gt;                                       </span></a>
+<a class="sourceLine" id="cb14-25" title="25"><span class="co">#&gt;  Empirical ROC curve                  </span></a>
+<a class="sourceLine" id="cb14-26" title="26"><span class="co">#&gt;  Number of postive responses :  325   </span></a>
+<a class="sourceLine" id="cb14-27" title="27"><span class="co">#&gt;  Number of negative responses :  58   </span></a>
+<a class="sourceLine" id="cb14-28" title="28"><span class="co">#&gt;  Area under curve :  0.783395225464191</span></a>
+<a class="sourceLine" id="cb14-29" title="29"><span class="kw">summary</span>(rocit_bin)</a>
+<a class="sourceLine" id="cb14-30" title="30"><span class="co">#&gt;                                       </span></a>
+<a class="sourceLine" id="cb14-31" title="31"><span class="co">#&gt;  Binormal ROC curve                   </span></a>
+<a class="sourceLine" id="cb14-32" title="32"><span class="co">#&gt;  Number of postive responses :  325   </span></a>
+<a class="sourceLine" id="cb14-33" title="33"><span class="co">#&gt;  Number of negative responses :  58   </span></a>
+<a class="sourceLine" id="cb14-34" title="34"><span class="co">#&gt;  Area under curve :  0.785449952447776</span></a>
+<a class="sourceLine" id="cb14-35" title="35"><span class="kw">summary</span>(rocit_non)</a>
+<a class="sourceLine" id="cb14-36" title="36"><span class="co">#&gt;                                       </span></a>
+<a class="sourceLine" id="cb14-37" title="37"><span class="co">#&gt;  Non-parametric ROC curve             </span></a>
+<a class="sourceLine" id="cb14-38" title="38"><span class="co">#&gt;  Number of postive responses :  325   </span></a>
+<a class="sourceLine" id="cb14-39" title="39"><span class="co">#&gt;  Number of negative responses :  58   </span></a>
+<a class="sourceLine" id="cb14-40" title="40"><span class="co">#&gt;  Area under curve :  0.773854658684883</span></a>
+<a class="sourceLine" id="cb14-41" title="41"></a>
+<a class="sourceLine" id="cb14-42" title="42"><span class="co">## Plot ROC curve</span></a>
+<a class="sourceLine" id="cb14-43" title="43"><span class="kw">plot</span>(rocit_emp, <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="st">&quot;gray50&quot;</span>), </a>
+<a class="sourceLine" id="cb14-44" title="44">     <span class="dt">legend =</span> <span class="ot">FALSE</span>, <span class="dt">YIndex =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb14-45" title="45"><span class="kw">lines</span>(rocit_bin<span class="op">$</span>TPR<span class="op">~</span>rocit_bin<span class="op">$</span>FPR, </a>
+<a class="sourceLine" id="cb14-46" title="46">      <span class="dt">col =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb14-47" title="47"><span class="kw">lines</span>(rocit_non<span class="op">$</span>TPR<span class="op">~</span>rocit_non<span class="op">$</span>FPR, </a>
+<a class="sourceLine" id="cb14-48" title="48">      <span class="dt">col =</span> <span class="dv">4</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb14-49" title="49"><span class="kw">legend</span>(<span class="st">&quot;bottomright&quot;</span>, <span class="dt">col =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">4</span>),</a>
+<a class="sourceLine" id="cb14-50" title="50">       <span class="kw">c</span>(<span class="st">&quot;Empirical ROC&quot;</span>, <span class="st">&quot;Binormal ROC&quot;</span>,</a>
+<a class="sourceLine" id="cb14-51" title="51">         <span class="st">&quot;Non-parametric ROC&quot;</span>), <span class="dt">lwd =</span> <span class="dv">2</span>)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p><strong><em>Confidence interval of AUC:</em></strong></p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="co"># Default </span></a>
+<a class="sourceLine" id="cb15-2" title="2"><span class="kw">ciAUC</span>(rocit_emp)</a>
+<a class="sourceLine" id="cb15-3" title="3"><span class="co">#&gt;                                                           </span></a>
+<a class="sourceLine" id="cb15-4" title="4"><span class="co">#&gt;    estimated AUC : 0.783395225464191                      </span></a>
+<a class="sourceLine" id="cb15-5" title="5"><span class="co">#&gt;    AUC estimation method : empirical                      </span></a>
+<a class="sourceLine" id="cb15-6" title="6"><span class="co">#&gt;                                                           </span></a>
+<a class="sourceLine" id="cb15-7" title="7"><span class="co">#&gt;    CI of AUC                                              </span></a>
+<a class="sourceLine" id="cb15-8" title="8"><span class="co">#&gt;    confidence level = 95%                                 </span></a>
+<a class="sourceLine" id="cb15-9" title="9"><span class="co">#&gt;    lower = 0.729587978876528     upper = 0.837202472051854</span></a>
+<a class="sourceLine" id="cb15-10" title="10"><span class="kw">ciAUC</span>(rocit_emp, <span class="dt">level =</span> <span class="fl">0.9</span>)</a>
+<a class="sourceLine" id="cb15-11" title="11"><span class="co">#&gt;                                                           </span></a>
+<a class="sourceLine" id="cb15-12" title="12"><span class="co">#&gt;    estimated AUC : 0.783395225464191                      </span></a>
+<a class="sourceLine" id="cb15-13" title="13"><span class="co">#&gt;    AUC estimation method : empirical                      </span></a>
+<a class="sourceLine" id="cb15-14" title="14"><span class="co">#&gt;                                                           </span></a>
+<a class="sourceLine" id="cb15-15" title="15"><span class="co">#&gt;    CI of AUC                                              </span></a>
+<a class="sourceLine" id="cb15-16" title="16"><span class="co">#&gt;    confidence level = 90%                                 </span></a>
+<a class="sourceLine" id="cb15-17" title="17"><span class="co">#&gt;    lower = 0.738238760649477     upper = 0.828551690278905</span></a>
+<a class="sourceLine" id="cb15-18" title="18"></a>
+<a class="sourceLine" id="cb15-19" title="19"><span class="co"># DeLong method</span></a>
+<a class="sourceLine" id="cb15-20" title="20"><span class="kw">ciAUC</span>(rocit_bin, <span class="dt">delong =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb15-21" title="21"><span class="co">#&gt;                                                           </span></a>
+<a class="sourceLine" id="cb15-22" title="22"><span class="co">#&gt;    estimated AUC : 0.785449952447776                      </span></a>
+<a class="sourceLine" id="cb15-23" title="23"><span class="co">#&gt;    AUC estimation method : binormal                       </span></a>
+<a class="sourceLine" id="cb15-24" title="24"><span class="co">#&gt;                                                           </span></a>
+<a class="sourceLine" id="cb15-25" title="25"><span class="co">#&gt;    CI of AUC, delong method of variance used              </span></a>
+<a class="sourceLine" id="cb15-26" title="26"><span class="co">#&gt;    confidence level = 95%                                 </span></a>
+<a class="sourceLine" id="cb15-27" title="27"><span class="co">#&gt;    lower = 0.727341865006208     upper = 0.843558039889344</span></a>
+<a class="sourceLine" id="cb15-28" title="28"></a>
+<a class="sourceLine" id="cb15-29" title="29"></a>
+<a class="sourceLine" id="cb15-30" title="30"><span class="co"># logit and inverse logit applied</span></a>
+<a class="sourceLine" id="cb15-31" title="31"><span class="kw">ciAUC</span>(rocit_bin, <span class="dt">delong =</span> <span class="ot">TRUE</span>,</a>
+<a class="sourceLine" id="cb15-32" title="32">      <span class="dt">logit =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb15-33" title="33"><span class="co">#&gt;                                                                          </span></a>
+<a class="sourceLine" id="cb15-34" title="34"><span class="co">#&gt;    estimated AUC : 0.785449952447776                                     </span></a>
+<a class="sourceLine" id="cb15-35" title="35"><span class="co">#&gt;    AUC estimation method : binormal                                      </span></a>
+<a class="sourceLine" id="cb15-36" title="36"><span class="co">#&gt;                                                                          </span></a>
+<a class="sourceLine" id="cb15-37" title="37"><span class="co">#&gt;    CI of AUC, delong method of variance used, logit tranformation applied</span></a>
+<a class="sourceLine" id="cb15-38" title="38"><span class="co">#&gt;    confidence level = 95%                                                </span></a>
+<a class="sourceLine" id="cb15-39" title="39"><span class="co">#&gt;    lower = 0.72169723187101     upper = 0.837879081307966</span></a>
+<a class="sourceLine" id="cb15-40" title="40"></a>
+<a class="sourceLine" id="cb15-41" title="41"></a>
+<a class="sourceLine" id="cb15-42" title="42"><span class="co"># bootstrap method</span></a>
+<a class="sourceLine" id="cb15-43" title="43"><span class="kw">set.seed</span>(<span class="dv">200</span>)</a>
+<a class="sourceLine" id="cb15-44" title="44">ciAUC_boot &lt;-<span class="st"> </span><span class="kw">ciAUC</span>(rocit_non, </a>
+<a class="sourceLine" id="cb15-45" title="45">                <span class="dt">level =</span> <span class="fl">0.9</span>, <span class="dt">nboot =</span> <span class="dv">200</span>)</a>
+<a class="sourceLine" id="cb15-46" title="46"><span class="kw">print</span>(ciAUC_boot)</a>
+<a class="sourceLine" id="cb15-47" title="47"><span class="co">#&gt;                                                           </span></a>
+<a class="sourceLine" id="cb15-48" title="48"><span class="co">#&gt;    estimated AUC : 0.773854658684883                      </span></a>
+<a class="sourceLine" id="cb15-49" title="49"><span class="co">#&gt;    AUC estimation method : non-parametric                 </span></a>
+<a class="sourceLine" id="cb15-50" title="50"><span class="co">#&gt;                                                           </span></a>
+<a class="sourceLine" id="cb15-51" title="51"><span class="co">#&gt;    bootstrap CI of AUC with 200 boot samples              </span></a>
+<a class="sourceLine" id="cb15-52" title="52"><span class="co">#&gt;    confidence level = 90%                                 </span></a>
+<a class="sourceLine" id="cb15-53" title="53"><span class="co">#&gt;    lower = 0.738588859416446     upper = 0.826931034482759</span></a></code></pre></div>
+<p><strong><em>Confidence interval of ROC curve:</em></strong></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw">data</span>(<span class="st">&quot;Loan&quot;</span>)</a>
+<a class="sourceLine" id="cb16-2" title="2">score &lt;-<span class="st"> </span>Loan<span class="op">$</span>Score</a>
+<a class="sourceLine" id="cb16-3" title="3">class &lt;-<span class="st"> </span><span class="kw">ifelse</span>(Loan<span class="op">$</span>Status <span class="op">==</span><span class="st"> &quot;CO&quot;</span>, <span class="dv">1</span>, <span class="dv">0</span>)</a>
+<a class="sourceLine" id="cb16-4" title="4">rocit_emp &lt;-<span class="st"> </span><span class="kw">rocit</span>(<span class="dt">score =</span> score, </a>
+<a class="sourceLine" id="cb16-5" title="5">                   <span class="dt">class =</span> class, </a>
+<a class="sourceLine" id="cb16-6" title="6">                   <span class="dt">method =</span> <span class="st">&quot;emp&quot;</span>)</a>
+<a class="sourceLine" id="cb16-7" title="7">rocit_bin &lt;-<span class="st"> </span><span class="kw">rocit</span>(<span class="dt">score =</span> score, </a>
+<a class="sourceLine" id="cb16-8" title="8">                   <span class="dt">class =</span> class, </a>
+<a class="sourceLine" id="cb16-9" title="9">                   <span class="dt">method =</span> <span class="st">&quot;bin&quot;</span>)</a>
+<a class="sourceLine" id="cb16-10" title="10"><span class="co"># --------------------------</span></a>
+<a class="sourceLine" id="cb16-11" title="11">ciROC_emp90 &lt;-<span class="st"> </span><span class="kw">ciROC</span>(rocit_emp, </a>
+<a class="sourceLine" id="cb16-12" title="12">                     <span class="dt">level =</span> <span class="fl">0.9</span>)</a>
+<a class="sourceLine" id="cb16-13" title="13"><span class="kw">set.seed</span>(<span class="dv">200</span>)</a>
+<a class="sourceLine" id="cb16-14" title="14">ciROC_bin90 &lt;-<span class="st"> </span><span class="kw">ciROC</span>(rocit_bin, </a>
+<a class="sourceLine" id="cb16-15" title="15">                     <span class="dt">level =</span> <span class="fl">0.9</span>, <span class="dt">nboot =</span> <span class="dv">200</span>)</a>
+<a class="sourceLine" id="cb16-16" title="16"><span class="kw">plot</span>(ciROC_emp90, <span class="dt">col =</span> <span class="dv">1</span>, </a>
+<a class="sourceLine" id="cb16-17" title="17">     <span class="dt">legend =</span> <span class="ot">FALSE</span>)</a>
+<a class="sourceLine" id="cb16-18" title="18"><span class="kw">lines</span>(ciROC_bin90<span class="op">$</span>TPR<span class="op">~</span>ciROC_bin90<span class="op">$</span>FPR, </a>
+<a class="sourceLine" id="cb16-19" title="19">      <span class="dt">col =</span> <span class="dv">2</span>, <span class="dt">lwd =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb16-20" title="20"><span class="kw">lines</span>(ciROC_bin90<span class="op">$</span>LowerTPR<span class="op">~</span>ciROC_bin90<span class="op">$</span>FPR, </a>
+<a class="sourceLine" id="cb16-21" title="21">      <span class="dt">col =</span> <span class="dv">2</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb16-22" title="22"><span class="kw">lines</span>(ciROC_bin90<span class="op">$</span>UpperTPR<span class="op">~</span>ciROC_bin90<span class="op">$</span>FPR, </a>
+<a class="sourceLine" id="cb16-23" title="23">      <span class="dt">col =</span> <span class="dv">2</span>, <span class="dt">lty =</span> <span class="dv">2</span>)</a>
+<a class="sourceLine" id="cb16-24" title="24"><span class="kw">legend</span>(<span class="st">&quot;bottomright&quot;</span>, <span class="kw">c</span>(<span class="st">&quot;Empirical ROC&quot;</span>,</a>
+<a class="sourceLine" id="cb16-25" title="25">                        <span class="st">&quot;Binormal ROC&quot;</span>,</a>
+<a class="sourceLine" id="cb16-26" title="26">                        <span class="st">&quot;90% CI (Empirical)&quot;</span>, </a>
+<a class="sourceLine" id="cb16-27" title="27">                        <span class="st">&quot;90% CI (Binormal)&quot;</span>),</a>
+<a class="sourceLine" id="cb16-28" title="28">       <span class="dt">lty =</span> <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">2</span>), <span class="dt">col =</span> </a>
+<a class="sourceLine" id="cb16-29" title="29">         <span class="kw">c</span>(<span class="dv">1</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">2</span>), <span class="dt">lwd =</span> <span class="kw">c</span>(<span class="dv">2</span>,<span class="dv">2</span>,<span class="dv">1</span>,<span class="dv">1</span>))</a></code></pre></div>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="Empirical ROC curve with 90% CI" />
+<p class="caption">Empirical ROC curve with 90% CI</p>
+</div>
+<p>Options available for plotting ROC curve with CI</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb17-1" title="1"><span class="kw">class</span>(ciROC_emp90)</a>
+<a class="sourceLine" id="cb17-2" title="2"><span class="co">#&gt; [1] &quot;rocci&quot;</span></a></code></pre></div>
+<p><strong><em>KS plot:</em></strong> KS plot shows the cumulative density functions <span class="math inline">\(F(c)\)</span> and <span class="math inline">\(G(c)\)</span> in the positive and negative populations. If the positive population have higher value, then negative curve (<span class="math inline">\(F(c)\)</span>) ramps up quickly. The KS statistic is the maximum difference of <span class="math inline">\(F(c)\)</span> and <span class="math inline">\(G(c)\)</span>.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb18-1" title="1"><span class="kw">data</span>(<span class="st">&quot;Diabetes&quot;</span>)</a>
+<a class="sourceLine" id="cb18-2" title="2">logistic.model &lt;-<span class="st"> </span><span class="kw">glm</span>(<span class="kw">as.factor</span>(dtest)<span class="op">~</span></a>
+<a class="sourceLine" id="cb18-3" title="3"><span class="st">                      </span>chol<span class="op">+</span>age<span class="op">+</span>bmi,</a>
+<a class="sourceLine" id="cb18-4" title="4">                      <span class="dt">data =</span> Diabetes,</a>
+<a class="sourceLine" id="cb18-5" title="5">                      <span class="dt">family =</span> <span class="st">&quot;binomial&quot;</span>)</a>
+<a class="sourceLine" id="cb18-6" title="6">class &lt;-<span class="st"> </span>logistic.model<span class="op">$</span>y</a>
+<a class="sourceLine" id="cb18-7" title="7">score &lt;-<span class="st"> </span>logistic.model<span class="op">$</span>fitted.values</a>
+<a class="sourceLine" id="cb18-8" title="8"><span class="co"># ------------</span></a>
+<a class="sourceLine" id="cb18-9" title="9">rocit &lt;-<span class="st"> </span><span class="kw">rocit</span>(<span class="dt">score =</span> score, </a>
+<a class="sourceLine" id="cb18-10" title="10">               <span class="dt">class =</span> class) <span class="co">#default: empirical</span></a>
+<a class="sourceLine" id="cb18-11" title="11">kplot &lt;-<span class="st"> </span><span class="kw">ksplot</span>(rocit)</a></code></pre></div>
+<div class="figure">
+<img src="data:image/png;base64,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" alt="KS plot" />
+<p class="caption">KS plot</p>
+</div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb19-1" title="1"><span class="kw">message</span>(<span class="st">&quot;KS Stat (empirical) : &quot;</span>, </a>
+<a class="sourceLine" id="cb19-2" title="2">        kplot<span class="op">$</span><span class="st">`</span><span class="dt">KS stat</span><span class="st">`</span>)</a>
+<a class="sourceLine" id="cb19-3" title="3"><span class="co">#&gt; KS Stat (empirical) : 0.471936339522546</span></a>
+<a class="sourceLine" id="cb19-4" title="4"><span class="kw">message</span>(<span class="st">&quot;KS Stat (empirical) cutoff : &quot;</span>, </a>
+<a class="sourceLine" id="cb19-5" title="5">        kplot<span class="op">$</span><span class="st">`</span><span class="dt">KS Cutoff</span><span class="st">`</span>)</a>
+<a class="sourceLine" id="cb19-6" title="6"><span class="co">#&gt; KS Stat (empirical) cutoff : 0.892084996383686</span></a></code></pre></div>
+</div>
+<div id="gains-table" class="section level2">
+<h2>Gains table</h2>
+<p>Gains table is a useful tool used in direct marketing. The observations are first rank ordered and certain number of buckets are created with the observations. The gains table shows several statistics associated with the buckets. This package includes <code>gainstable</code> function that creates gains table containing ngroup number of groups or buckets. The algorithm first orders the score variable with respect to score variable. In case of tie, it class becomes the ordering variable, keeping the positive responses first. The algorithm calculates the ending index in each bucket as <span class="math inline">\(round((length(score) / ngroup) * (1:ngroup))\)</span>. Each bucket should have at least 5 observations.</p>
+<p>If buckets’ end index are to be ended at desired level of population, then breaks should be specified. If specified, it overrides ngroup and ngroup is ignored. breaks by default always includes 100. If whole number does not exist at specified population, nearest integers are considered. Following stats are computed:</p>
+<ul>
+<li><code>Obs</code>: Number of observation in the group.</li>
+<li><code>CObs</code>: Cumulative number of observations up to the group.</li>
+<li><code>Depth</code>: Cumulative population depth up to the group.</li>
+<li><code>Resp</code>: Number of (positive) responses in the group.</li>
+<li><code>CResp</code>: Cumulative number of (positive) responses up to the group.</li>
+<li><code>RespRate</code>: (Positive) response rate in the group.</li>
+<li><code>CRespRate</code>: Cumulative (positive) response rate up to the group</li>
+<li><code>CCapRate</code>: Cumulative overall capture rate of (positive) responses up to the group.</li>
+<li><code>Lift</code>: Lift index in the group. Calculated as GroupResponseRate / OverallResponseRate.</li>
+<li><code>CLift</code>: Cumulative lift index up to the group.</li>
+</ul>
+<div class="sourceCode" id="cb20"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb20-1" title="1"><span class="kw">data</span>(<span class="st">&quot;Loan&quot;</span>)</a>
+<a class="sourceLine" id="cb20-2" title="2">class &lt;-<span class="st"> </span>Loan<span class="op">$</span>Status</a>
+<a class="sourceLine" id="cb20-3" title="3">score &lt;-<span class="st"> </span>Loan<span class="op">$</span>Score</a>
+<a class="sourceLine" id="cb20-4" title="4"><span class="co"># ----------------------------</span></a>
+<a class="sourceLine" id="cb20-5" title="5">gtable15 &lt;-<span class="st"> </span><span class="kw">gainstable</span>(<span class="dt">score =</span> score, </a>
+<a class="sourceLine" id="cb20-6" title="6">                       <span class="dt">class =</span> class,</a>
+<a class="sourceLine" id="cb20-7" title="7">                       <span class="dt">negref =</span> <span class="st">&quot;FP&quot;</span>, </a>
+<a class="sourceLine" id="cb20-8" title="8">                       <span class="dt">ngroup =</span> <span class="dv">15</span>)</a></code></pre></div>
+<p><code>rocit</code> object can be passed</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb21-1" title="1">rocit_emp &lt;-<span class="st"> </span><span class="kw">rocit</span>(<span class="dt">score =</span> score, </a>
+<a class="sourceLine" id="cb21-2" title="2">                   <span class="dt">class =</span> class, </a>
+<a class="sourceLine" id="cb21-3" title="3">                   <span class="dt">negref =</span> <span class="st">&quot;FP&quot;</span>)</a>
+<a class="sourceLine" id="cb21-4" title="4">gtable_custom &lt;-<span class="st"> </span><span class="kw">gainstable</span>(rocit_emp, </a>
+<a class="sourceLine" id="cb21-5" title="5">                    <span class="dt">breaks =</span> <span class="kw">seq</span>(<span class="dv">1</span>,<span class="dv">100</span>,<span class="dv">15</span>))</a>
+<a class="sourceLine" id="cb21-6" title="6"><span class="co"># ------------------------------</span></a>
+<a class="sourceLine" id="cb21-7" title="7"><span class="kw">print</span>(gtable15)</a>
+<a class="sourceLine" id="cb21-8" title="8"><span class="co">#&gt;    Bucket Obs CObs Depth Resp CResp RespRate CRespRate CCapRate  Lift</span></a>
+<a class="sourceLine" id="cb21-9" title="9"><span class="co">#&gt; 1       1  60   60 0.067   20    20    0.333     0.333    0.153 2.290</span></a>
+<a class="sourceLine" id="cb21-10" title="10"><span class="co">#&gt; 2       2  60  120 0.133   11    31    0.183     0.258    0.237 1.260</span></a>
+<a class="sourceLine" id="cb21-11" title="11"><span class="co">#&gt; 3       3  60  180 0.200   12    43    0.200     0.239    0.328 1.374</span></a>
+<a class="sourceLine" id="cb21-12" title="12"><span class="co">#&gt; 4       4  60  240 0.267   14    57    0.233     0.238    0.435 1.603</span></a>
+<a class="sourceLine" id="cb21-13" title="13"><span class="co">#&gt; 5       5  60  300 0.333   11    68    0.183     0.227    0.519 1.260</span></a>
+<a class="sourceLine" id="cb21-14" title="14"><span class="co">#&gt; 6       6  60  360 0.400   13    81    0.217     0.225    0.618 1.489</span></a>
+<a class="sourceLine" id="cb21-15" title="15"><span class="co">#&gt; 7       7  60  420 0.467    9    90    0.150     0.214    0.687 1.031</span></a>
+<a class="sourceLine" id="cb21-16" title="16"><span class="co">#&gt; 8       8  60  480 0.533    7    97    0.117     0.202    0.740 0.802</span></a>
+<a class="sourceLine" id="cb21-17" title="17"><span class="co">#&gt; 9       9  60  540 0.600    5   102    0.083     0.189    0.779 0.573</span></a>
+<a class="sourceLine" id="cb21-18" title="18"><span class="co">#&gt; 10     10  60  600 0.667    9   111    0.150     0.185    0.847 1.031</span></a>
+<a class="sourceLine" id="cb21-19" title="19"><span class="co">#&gt; 11     11  60  660 0.733    4   115    0.067     0.174    0.878 0.458</span></a>
+<a class="sourceLine" id="cb21-20" title="20"><span class="co">#&gt; 12     12  60  720 0.800    7   122    0.117     0.169    0.931 0.802</span></a>
+<a class="sourceLine" id="cb21-21" title="21"><span class="co">#&gt; 13     13  60  780 0.867    3   125    0.050     0.160    0.954 0.344</span></a>
+<a class="sourceLine" id="cb21-22" title="22"><span class="co">#&gt; 14     14  60  840 0.933    6   131    0.100     0.156    1.000 0.687</span></a>
+<a class="sourceLine" id="cb21-23" title="23"><span class="co">#&gt; 15     15  60  900 1.000    0   131    0.000     0.146    1.000 0.000</span></a>
+<a class="sourceLine" id="cb21-24" title="24"><span class="co">#&gt;    CLift</span></a>
+<a class="sourceLine" id="cb21-25" title="25"><span class="co">#&gt; 1  2.290</span></a>
+<a class="sourceLine" id="cb21-26" title="26"><span class="co">#&gt; 2  1.775</span></a>
+<a class="sourceLine" id="cb21-27" title="27"><span class="co">#&gt; 3  1.641</span></a>
+<a class="sourceLine" id="cb21-28" title="28"><span class="co">#&gt; 4  1.632</span></a>
+<a class="sourceLine" id="cb21-29" title="29"><span class="co">#&gt; 5  1.557</span></a>
+<a class="sourceLine" id="cb21-30" title="30"><span class="co">#&gt; 6  1.546</span></a>
+<a class="sourceLine" id="cb21-31" title="31"><span class="co">#&gt; 7  1.472</span></a>
+<a class="sourceLine" id="cb21-32" title="32"><span class="co">#&gt; 8  1.388</span></a>
+<a class="sourceLine" id="cb21-33" title="33"><span class="co">#&gt; 9  1.298</span></a>
+<a class="sourceLine" id="cb21-34" title="34"><span class="co">#&gt; 10 1.271</span></a>
+<a class="sourceLine" id="cb21-35" title="35"><span class="co">#&gt; 11 1.197</span></a>
+<a class="sourceLine" id="cb21-36" title="36"><span class="co">#&gt; 12 1.164</span></a>
+<a class="sourceLine" id="cb21-37" title="37"><span class="co">#&gt; 13 1.101</span></a>
+<a class="sourceLine" id="cb21-38" title="38"><span class="co">#&gt; 14 1.071</span></a>
+<a class="sourceLine" id="cb21-39" title="39"><span class="co">#&gt; 15 1.000</span></a>
+<a class="sourceLine" id="cb21-40" title="40"><span class="kw">print</span>(gtable_custom)</a>
+<a class="sourceLine" id="cb21-41" title="41"><span class="co">#&gt;   Bucket Obs CObs Depth Resp CResp RespRate CRespRate CCapRate  Lift CLift</span></a>
+<a class="sourceLine" id="cb21-42" title="42"><span class="co">#&gt; 1      1   9    9  0.01    5     5    0.556     0.556    0.038 3.817 3.817</span></a>
+<a class="sourceLine" id="cb21-43" title="43"><span class="co">#&gt; 2      2 135  144  0.16   33    38    0.244     0.264    0.290 1.679 1.813</span></a>
+<a class="sourceLine" id="cb21-44" title="44"><span class="co">#&gt; 3      3 135  279  0.31   26    64    0.193     0.229    0.489 1.323 1.576</span></a>
+<a class="sourceLine" id="cb21-45" title="45"><span class="co">#&gt; 4      4 135  414  0.46   26    90    0.193     0.217    0.687 1.323 1.494</span></a>
+<a class="sourceLine" id="cb21-46" title="46"><span class="co">#&gt; 5      5 135  549  0.61   13   103    0.096     0.188    0.786 0.662 1.289</span></a>
+<a class="sourceLine" id="cb21-47" title="47"><span class="co">#&gt; 6      6 135  684  0.76   18   121    0.133     0.177    0.924 0.916 1.215</span></a>
+<a class="sourceLine" id="cb21-48" title="48"><span class="co">#&gt; 7      7 135  819  0.91    7   128    0.052     0.156    0.977 0.356 1.074</span></a>
+<a class="sourceLine" id="cb21-49" title="49"><span class="co">#&gt; 8      8  81  900  1.00    3   131    0.037     0.146    1.000 0.254 1.000</span></a></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb22-1" title="1"><span class="kw">plot</span>(gtable15, <span class="dt">type =</span> <span class="dv">1</span>)</a></code></pre></div>
+<div class="figure">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAkAAAAGACAMAAAByRC0tAAAAclBMVEUAAAAAADoAAGYAOpAAZrYmSE86AAA6ADo6AGY6kNtmAABmADpmZmZmkJBmtrZmtv9/f3+LRQCQOgCQOjqQZgCQkGaQtpCQ2/+2ZgC225C2/7a2//++vr7bkDrb/7bb////tmb/trb/25D//7b//9v///+W7SbJAAAACXBIWXMAAA7DAAAOwwHHb6hkAAAVuklEQVR4nO2dDXurKhZG09Omd9o7c5vpfDR3TjLHaev//4sjIIoKCGxQkHc9T78SskniKhtRd04tAAROez8BUDYQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIAEBAIkIBAgAYEACQgESEAgQAICARIQCJCAQIAEBAIkfAT6en3pvjen0+nHz1TPBxSGt0D3x1/stzdDOHAQUgnUq8M1Ioarnazfq2QCfT5zgRpDEsv6TcmMrN+rbEagi3N095ZJgm7ffY0CseT41MrptEu4nLfgzt3XJ1DLHXr46HbEDP7k/aZkRtbvVSqBNg53aLJ+r7IRKOccsnP3VQt0d90Ly3kL7tx91QLNo0gu3VuGL7cvCJQ+3KHJ+r3KRqCcc8jO3dco0L3LUmIhEXMgcssKBbo/fLRfr2wl0VkgYCTr9yqJQN/vL/z74y8IFIGs36tEhzLESRzXx19IYfSW3gJd+wOQfDt0s4mXxnBSTQQSjkAd1ycIRG85f69uAvMDrsoRbOXAdhISzYF6bb5eTeckZj0sZwZRoLcCBerGTfGUv98hEBnxXt1sTB+gpLDPZ7FwazirJtaTi9kwMFzOOWTn7vl7ZfXHLFCpI5B/uJy34M7dB6ewqgSycD6f43ZeGBCIFO4siNt9UUAgl3DGQXwhUPUpbBUIpHA+zw2CQGtUKZCJpUDVEUEg06npdCBQ/vgLJNZ+XobR51rzOhDmQFkvukKgdC0hUFDD+OGQwjKmBIHYygcEypRsBLIP96pBSGE5UZBAZ6eWHkFTt4RAQQ2ThLvdKj4iBoEihOMGxX0KxRDw1n+/u5wDNFmhbiwr1pZzZLMRaGW4Z8cOe4OQwlYRVVGuDx/2Zqow1sMdlnNkSxFISWIQaC2d99Xh+GUxNgIFettAID6EnixVWr19VIag2li8V2vrYrIs3P9+ik3NT23947VLPewM17fhxv4wB7uJ3fH4X9aOqdF0Yxe7NlQeQrOcI5vopHrZtbHCVJBAlRok3quzjUn77/en4fdRIO5E9w99//FTFej6JK8D5WKJx7LrsbrbPp/l1TXmw/tpL+uJWSNRDEHnWlOY1Z/zpL168H0U6KVt+29vikBfv3+IlCe9YBfUdAH6Ut99BtlaICW+c5VWJ4G4QXUKpLB2eoJeoLd+bjQViLVpZFqTX10Ga/gEvJ9MFTECrSLO4awxifnOgfQpzCBQN9X58acyArGc1vnS9HWc9hFouCws4hyoYoO898Lkf21zelsTaLh98KL58R8xCCkBNxeoL/RrWcsKuKxHClR9CltF2Y3n6az7eybQMBfiU4xGSWHdt7/++Dnbq99eIP9wrgK1EGgdPvB/v3ejCJPo+/00FUje2I9A3X/7i7I+eOUVvtle2LAUaTlHNhuBHJAGnaM+k/wJeK94BuBbnf32xyyFyRv7OdDDBxPlyteBWjEetaJGmNwDspwjm1qgmPWBBoHOYc+lVHAwVYlCq9J6Yz8vl8vZsf0lQdXUFDF5WFRpJfXrMl8QQ9DFPYnVOgfakGwEcmG4nLeuJFajQP5VWp2QBtU1DapQoIAqrU7DPReItXQ0CCksOQkPZfhVafUTyDGJQaDkJD2Y6lOl1Y2xqElFSaw+gUKqtLqhCnQOC1Ee9QkUUqXVcbjvDOpbugiEFJYcf4H4KUit+Uwfjn+VVm+BXAyCQMkJF8iUnCL3O0Op7FZNEjuUQNfhYITx83Tj9junQoNOWeP8KuQvcgQivinzG1yH+9ttbLkq0DFSWNbdewokT8MmE0WgVYNq2II7d+8t0EsigZxR69vWXjkoA3xT2H1MfrtMoqcCrV6gAFJT3ByoVVPYmkA15JCdu8/mdA6P1zDZD7MaVMMW3Ln7bARy5+YuEEhOwCT6dd850OyAGBTal2xGIJ8UphmC9ArVkEN27v4YApl26GvYgjt3Hy6Q9WCqfzgfZktBwy9IZdtTvEAqcGh7shHIZxS1fNjaxKHz5eweNH5LpDBrwx0Fshk0Toe6bxfzeDS7p9wtuHP32QjkhVWgdnXnDMkuHscUaG2F6AaBYuG9kJjqYKrfKLpuEFfocl4hsPvoTcvtPtFlPbxCo02yTAQK+ACO3Lbgzt2nE4jXWTOWr6auSzoaZEhTxoFouJv49OohmUC9OvGKbE6hCTTOgTQa2edHkGtKMoH6On3xyvxOWzoIZFkHui2UuZznTukjWpcGtM90t5aFpzDfEcj3NTgZZAh6u/HPH1NDXFbzGgcCzW9IJBDbS3tqpzWvg8NpcRLI8MibePBNE2N91m3LbxUSLpD9wsLOoYcPc5noHQW6jd7oDHJUKLDz41Hi6Rzih4tBy6C3iTTjH5NrhWwZTF0a8O9+y5YFp7CQcJsIdLvNBp3hbzeBhjmQQaJz+gNstQkUubyLin8Sm+ujv8m2qz6xZm5RldktQCB5OCPkUMZwHCRCadybf/ubrnSwT5yubTcGTW5jf/OvdvxJfm1FfXkKtPpBin7hJP6jqMMIpAbVjjX9Hc7dd20vyzimCTZSmK6h9cM1nYkgkINBY1CjPuI+t+75FEojEEdjEATSNVQ+DIxAjDm5+yRoMXle3O0cxRyqzv38gDnQ528Rrm3eVCC7Pq2bQWOQFYMMu2gHlSpEoOe1SbTDWUMxUti6QRfRal2P22WtibrDb09i4++X2d/bXsSfbwp7srXr26ztoqUXSM5XXPxpJxebGYIp3VvGoEnQcSiCQH6T6FXLoqxLrgrkqk+7ksUWUVyjtoefGqWaRDcnu2ZxFrbXNrqzPq3NCV0Uv1VMCJR+Eh00iq4JtJKYpkENBs0tvKx3PWvazoYha0v3mBGbbpzCMjipXmIdNTwF0hu0GH4GgbzWMWdrjWdzS/eY8ZpuKlAcIoWzDBqeGUw+bu0W9S6P0Io3GokKzm3HE0iKEyDQwhdrAM/gc2MWRvkEy4fCU1i73ODqRg85wDYG1OszOTzi8UwXqBktxTXYmacw2oWp0SbRii+apBV0gE0dwta6d36mBlSBzpYGPjEDmu4yB7quryf6hAtiVCYkYVljOkWL0uF8fq3LdRG6SUSZ18ZLbhOihFTHIJem9P40AtmUyoxUJ9V7h6OkMOPWpufFlZh2gxy7X8yBbAYdJoWJz9QNJq5ADk29g7rFtBoUKtDkrplE5Qsk98Jo5yXGngNFxC9orCxmvoero09mGeS2steBMhAozkTaiGrNPKFlMT3KRqByF/MjZ9A5M0XcTxHZpkKkt0DiRI3PZ+J5rYcSyGRQsu4d9tAsEyty9yq+An29irmP/BlK5AFtV6InUSdsu2rtdvnNV6Cr9MZYNiFyvyWQj0FWp5LgKZByNpmpcEtgv+WmsNZoUOLuF4rM3Lk4K7RdClPOZ92zTnT8psSWeQjUTu9TK0Qu7yZ3L/AWaByBMjiUkQ+7JLG5B7O7hDiafBYzu3nPgYb156sthX2/r5zycTyBdjHIjFaZqVPmR3r04ytQX/pQ+UXHXRaWMlaYOlgK0xu076XNy3Ug4wTbMS/quvdeB+qVuBtrj7VOU+3DCaQzaF+BDE3nFvHZ0uJu55ghl/XIAohGHKbaR0thbYZZzIROoQWuwZIcyggZgconhwNzbiwcIRiU5ljYXV5WWM8cSLetUwSN8eoXihguYDsvHrnZZT2r53xAoMCgcV792bgOJNXRW7ScmGdzNL58yklhNlRr5mORblyCQNGIfGr2JGjUmCvMB51Roj0Ecq7SepgUpmzufFOYb8tBosX1RxuPQEPdqb8zuued9uclcfz5z9st8PGXlbiZvE/n8/L2bQVKFS4rIuacW3/RW6RwNLTTasyBEhDNIBknL4Mmt2UjUPlzIBWhEDXo4KEi0J6v/qw5TZZwYeGJfR5PKAcXSBhEF2j5276vfqN1oJAqrYeDnsemhUKITycVaVJYQJXW40FdwJk8+kACff0uEpf1lFb/Kq0HS2GiqbNBmqCzx8q/cnv14QLZT2n1rtJ6SIGc89gy6PyB8u/cXr33Ka3j7AaX9TgQnMYWD8s0iYWPQBv1WzxhCmmLP0Z4NtHxv6wnkUDHTGGM8RiZ2YB5UF1bcZtj96w3vyLHgS39L+uBQN5NvQXSNz2CQGz5cGWFxytcJXie6WFq6ZHENjsNBHOgTfAVyO92cocEcCxsk+69Upi5nfvhkWxTWCzqFMipFJWlGbPCretcBWKT6DSV6o+Nw46Y0tR2p1+Hjq0JZDMCVYHDRl1p4OrEZmeiZSPQsVPYgMEgNdlZQ65/uOvYy8X5IP4ucyDUBwprqlXoMt67FtOtgH6/ZOR9KM5nssbJRqB6sG0ghw3u0iL8RCLPFSsItAvGLUSeZC8bVCNQNSmMM99Gw1Ezh5hrs6Thfhl0NeYhUlhdAs0N8trW1mZKXB8r1edVpkDVsdxM7rvo1qgON9mfVcoU5nC6fOR+j8t8Q9GPlRli+Piw4RyIRu0pjDNuKb89bsscXFtdZn1tQA1hbb/NsTBRDLjxqtJao0DjJvdc89O31c/Mze01LfsIm8yBLHCBeHE7pVpieLgjMx4k89rd9sxUrtFlu71TGBOoV6eiGomBBArkN1d2Cq88Cfdnk0ygvo60c5XWOlMYg2037yvINBdtLAI4niPSDnlRdym1JSYnmxEIAvnFNFw2Zux+VSC3BeytBJKlpI0fCoUUNhCSwpbbm3oMbRbB+emk2o3vHHr4MFf5hUAjYQJNNjH9GFrwqibWgXbvPiyFqZvY8GCna4VEy+V9hsY4J3rDlom7l5vYOHrNg5oN0p097SRlRlVagTfeS0jmy4XCD4DsVaX10qmML+pXl/v4l0977e269s5xtxTIHK7AHLJ392vDzzKoaajRd69rvHkKcw5X4hbcuXt/gUwr2PkJVN1HXu5ByO6/ZnfdHMAldhqBAj7yEngTuAA5j+HcVksSgar8yMvtuw9IYe1iAfJm695+fI2T6FCG/0delrgFd+4+VCB1AfJm7X4vger8yMtSuCkrkOtt11qkmgN5f+Ql2AyPBci9BKryIy+L6X7pjzno3CCsA23YMtful+PPEQQCm+G1+7/WDgLVh6dA9obZCFRTDtm5+6VAtqCmS4V6IFB93fsJ1NpbZiMQyBV7DoNAYA2rQdkIVFMOKax76w4/BEL3qy1tS47ZCATyxZbDIBBYx2JQNgLlPYhX3v28bJ4CBEL3Di0Hg/IVCOSMOYdBIOCC0aBsBMp9EK+8e+PJrxAI3Tu1zF4gkDmGJIYLC4EbmwoUcGFh/oN47d1zg/K9rKeEt7Du7jcUKOTCQpA92iSWzQgEsmc7gUIuLCxhEK+9e10hGFxYiO49BFpWA8U6EHBGdz0QBALO7CGQc5XWMgbxurvPIIXFqNJ6cW97SVAZNUVMn9eU4sv1Nemrwm4pUKpwYAswBwIkNhTI/2BqGbMAdD+/AQdT0X1+AuFQRj3gYCogkc0IVO4gXnf3ux1MBQchiUDrB1OJ8XcMWswTzezVp560VPAWHiEoBMoyZjlBIVCWMcsJCoGyjFlOUAiUZcxygkKgLGOWExQCZRmznKAQKMuY5QTNVyBwcCAQIAGBAAkIBEhAIEACAgESEAiQgECABAQCJCAQIAGBAAkIBEhAIEAiqUDN6fTwETEevzT/JX7kK7/KJGbMz+fT6amNHPTevfq3mEE///JzEi4kbkqBmu7ZNBG38/d7F+zONkzcyA2/TClmzKYL+PUa+YneWSxmUKygX6/8+uIhXFDchAKJC1mvT9ECfj6z/7/7j59xI3+9MoFixhSxIj/R7/cnEStW0EZUWRnChcVNKNCwveOG7f5H4ka+P/6zEyhmzM/f+n/jmEEHgSIFbU4vvMLBEC4sbkqB+NtoKsMQzLV7qTEjd8HYHChmzObHf175ZC3qE5UpLF5QIZAMFxY3oUAincacBPGo3YaJGZkN3EygmDHvLDewESPuW9DPceMF5bIM4cLiliZQI+fQ0TZ2J090gR76/+Wob0E39Hb5Jua/T+YCpUhhoixIxMg8VOwUJuYR3ZwiZtBxrlJLCkswie5r7EWMfO+rmbzFfLZiI3QbJGpQOUDEC5r5JDr6bvxQnyh25Gvk3XhRyq2Juxsvtm/UoE3eu/HRFxLZBCBJ5GvshcS7NDJmUDkHihe0yXshkeeHmFPoPt2wkHEji0MZMWM28phLzKDX2EH7+c4QLiQuDqYCEhAIkIBAgAQEAiQgECABgQAJCARIQCBAAgIBEhAIkIBAgAQEAiQgECABgQAJCARIQCBAAgIBEhAIkIBAgAQEAiQgECABgQAJCARIQCBAAgIBEhAIkIBAgERNAl3FtfXW8hOisEZP8zb9e4m+FsHicd/vb6zyL7sEn/3adfN73Lpt+1GVQLyGwtcr/2FA3fAr8jC0ArHHTR9758VTeJnMRvjb2J5ESdQnkL2CSRKB2B+s/tf98df3P8QDxEB0ACoUiFdq6uuvfP7272f+C9/g3Tf+88pLwrNq84//FbWiTn2jP177YvGtKIbyr77WjBqrf9zfnoemrIxKL1AjE+j9IENQhQI1fblcVkq+29hv/R+jQKxIF6uTOYwksvXXKyuV3w86rN5Tc+pvYIWfJrGmTZ9akcJe5AAUv3rtXtQnEDNBVHPj9QZ5TfnHX4pAfILLhikp0ND66/VFlprrf1z7G3mRSjWW2lS04JPoYQCS9xVPVQKJvbBhy7IyqqLwINNASWE8Z40CDa1lI95ClocTQ8k8ltp0nA91A9DXK/+Agd6q8qlKoGHaIbZ1t2H70rZTgbo5zY8/n+cCSbt6He6DQEOdVzWW2nQcbLoBqEtn/HlAoPKYCzQWcp4IxO/8XAhkH4HaoeCyZQTiA9CLeCgEKo9RoNkc6MrmLS/SEVG//aSdA82HlXt/o7hliDUXqHeleWoHgTAHKo9RIGUvrN8l+35//PX9fpIjUDdTeeEbe7YXNlrRf/aJ3Ne6MhmH3buXadO+9jLfBZMpDHth5aEINKwDPcvlmk6Z0x/DHOjhozOim3XP14EUK6brQLyGs4wlHyebynK6T6If/hfWgQ5BzERijqVZ0nZY5S4DCLRFrPviAC6OhR2DjQRaHPnC0XgAOBAIkIBAgAQEAiQgECABgQAJCARIQCBAAgIBEhAIkIBAgAQEAiQgECABgQAJCARIQCBAAgIBEhAIkIBAgAQEAiQgECDxfxULIiiMGqxSAAAAAElFTkSuQmCC" alt="Lift and Cum. Lift plot" />
+<p class="caption">Lift and Cum. Lift plot</p>
+</div>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-altman1994diagnostic">
+<p>Altman, Douglas G, and J Martin Bland. 1994a. “Diagnostic Tests. 1: Sensitivity and Specificity.” <em>BMJ: British Medical Journal</em> 308 (6943): 1552.</p>
+</div>
+<div id="ref-altman1994statistics">
+<p>———. 1994b. “Statistics Notes: Diagnostic Tests 2: Predictive Values.” <em>Bmj</em> 309 (6947): 102.</p>
+</div>
+<div id="ref-beitzel2007temporal">
+<p>Beitzel, Steven M, Eric C Jensen, Abdur Chowdhury, Ophir Frieder, and David Grossman. 2007. “Temporal Analysis of a Very Large Topically Categorized Web Query Log.” <em>Journal of the American Society for Information Science and Technology</em> 58 (2): 166–78.</p>
+</div>
+<div id="ref-bermingham2011using">
+<p>Bermingham, Adam, and Alan Smeaton. 2011. “On Using Twitter to Monitor Political Sentiment and Predict Election Results.” In <em>Proceedings of the Workshop on Sentiment Analysis Where Ai Meets Psychology (Saaip 2011)</em>, 2–10.</p>
+</div>
+<div id="ref-bewick2004statistics">
+<p>Bewick, Viv, Liz Cheek, and Jonathan Ball. 2004. “Statistics Review 13: Receiver Operating Characteristic Curves.” <em>Critical Care</em> 8 (6): 508.</p>
+</div>
+<div id="ref-delong1988comparing">
+<p>DeLong, Elizabeth R, David M DeLong, and Daniel L Clarke-Pearson. 1988. “Comparing the Areas Under Two or More Correlated Receiver Operating Characteristic Curves: A Nonparametric Approach.” <em>Biometrics</em>, 837–45.</p>
+</div>
+<div id="ref-denecke2008using">
+<p>Denecke, Kerstin. 2008. “Using Sentiwordnet for Multilingual Sentiment Analysis.” In <em>Data Engineering Workshop, 2008. ICDEW 2008. IEEE 24th International Conference on</em>, 507–12. IEEE.</p>
+</div>
+<div id="ref-hanley1982meaning">
+<p>Hanley, James A, and Barbara J McNeil. 1982. “The Meaning and Use of the Area Under a Receiver Operating Characteristic (Roc) Curve.” <em>Radiology</em> 143 (1): 29–36.</p>
+</div>
+<div id="ref-huang2009analyzing">
+<p>Huang, Jeff, and Efthimis N Efthimiadis. 2009. “Analyzing and Evaluating Query Reformulation Strategies in Web Search Logs.” In <em>Proceedings of the 18th Acm Conference on Information and Knowledge Management</em>, 77–86. ACM.</p>
+</div>
+<div id="ref-james2013introduction">
+<p>James, Gareth, Daniela Witten, Trevor Hastie, and Robert Tibshirani. 2013. <em>An Introduction to Statistical Learning</em>. Vol. 112. Springer.</p>
+</div>
+<div id="ref-lusted1971decision">
+<p>Lusted, Lee B. 1971. “Decision-Making Studies in Patient Management.” <em>New England Journal of Medicine</em> 284 (8): 416–24.</p>
+</div>
+<div id="ref-nguyen2006training">
+<p>Nguyen, Thuy TT, and Grenville Armitage. 2006. “Training on Multiple Sub-Flows to Optimise the Use of Machine Learning Classifiers in Real-World Ip Networks.” In <em>Proceedings. 2006 31st Ieee Conference on Local Computer Networks</em>, 369–76. IEEE.</p>
+</div>
+<div id="ref-pepe2003statistical">
+<p>Pepe, Margaret Sullivan. 2003. <em>The Statistical Evaluation of Medical Tests for Classification and Prediction</em>. Medicine.</p>
+</div>
+<div id="ref-siddiqi2012credit">
+<p>Siddiqi, Naeem. 2012. <em>Credit Risk Scorecards: Developing and Implementing Intelligent Credit Scoring</em>. Vol. 3. John Wiley &amp; Sons.</p>
+</div>
+<div id="ref-zou1997smooth">
+<p>Zou, Kelly H, WJ Hall, and David E Shapiro. 1997. “Smooth Non-Parametric Receiver Operating Characteristic (Roc) Curves for Continuous Diagnostic Tests.” <em>Statistics in Medicine</em> 16 (19): 2143–56.</p>
+</div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
