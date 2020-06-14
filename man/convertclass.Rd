@@ -15,7 +15,8 @@ is converted to 0 and other is converted to 1. If NULL, reference is
 set alphabetically.}
 }
 \value{
-A numeric vector of 1 and 0.
+A numeric vector of 1 and 0. Gives warning if there exists \code{NA}(s)
+ in \code{x}.
 }
 \description{
 \code{convertclass} converts a binary variable with any

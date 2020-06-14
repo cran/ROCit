@@ -9,6 +9,9 @@
 #' @return NULL
 #'
 #'
+#' @seealso \code{\link{rocit}}, \code{\link{print.rocit}}
+#'
+#'
 #' @examples
 #' data("Diabetes")
 #' roc_empirical <- rocit(score = Diabetes$chol, class = Diabetes$dtest,
@@ -21,18 +24,16 @@
 #' @export
 summary.rocit<- function(object, ... = NULL)
 {
-  mthd <- object$method
-  mthd <- paste0(toupper(substr(mthd,1,1)),(substr(mthd,2,nchar(mthd))))
-
-  row_1 <- paste(mthd, "ROC curve")
-  row_2 <- paste("Number of postive responses : ", object$pos_count)
-  row_3 <- paste("Number of negative responses : ", object$neg_count)
-  row_4 <- paste("Area under curve : " , object$AUC)
-  d <- as.data.frame(rbind(row_1, row_2, row_3, row_4))
-  d <- format(d, justify = "left")
-  row.names(d) <- NULL
-  colnames(d) <- NULL
-  print(d, row.names = FALSE)
+  msg <- NULL
+  msg <- c(msg, paste("Method used:", object$method))
+  msg <- c(msg, paste("Number of positive(s):", object$pos_count))
+  msg <- c(msg, paste("Number of negative(s):", object$neg_count))
+  msg <- c(msg, paste("Area under curve:", round(object$AUC, 4)))
+  pdf <- data.frame(msg)
+  names(pdf) <- NULL
+  print(pdf, row.names = FALSE, right = FALSE, quote = FALSE)
 }
+
+
 
 

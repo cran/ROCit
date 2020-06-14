@@ -27,13 +27,9 @@
 #'
 #'
 #' @export
-cartesian_2D <- function(array_x, array_y){
-  tempfun <- function(x) cbind(x, array_y)
-  result <- NULL
-  for(i in 1:length(array_x)){
-    result <- rbind(result, tempfun(array_x[i]))
-  }
-  result
+cartesian_2D <- function(array_x, array_y) {
+  cbind(x = rep(array_x, each = length(array_y)),
+        array_y = rep(array_y, length(array_x)))
 }
 
 

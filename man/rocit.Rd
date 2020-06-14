@@ -4,7 +4,7 @@
 \alias{rocit}
 \title{ROC Analysis of Binary Classifier}
 \usage{
-rocit(score, class, negref = NULL, method = "empirical")
+rocit(score, class, negref = NULL, method = "empirical", step = FALSE)
 }
 \arguments{
 \item{score}{An numeric array of diagnostic score.}
@@ -22,6 +22,11 @@ set alphabetically.}
 \item{method}{The method of estimating ROC curve. Currently supports
 \code{"empirical"}, \code{"binormal"} and \code{"nonparametric"}.
 Pattern matching allowed thorough \code{\link[base:grep]{grep}}.}
+
+\item{step}{Logical, default in \code{FALSE}. Only applicable for
+\code{empirical} method and ignored for others. Indicates
+whether only horizontal and vertical steps should be used
+to produce the ROC curve. See "Details".}
 }
 \value{
 A list of class \code{"rocit"}, having following elements:
@@ -64,19 +69,26 @@ diagnostic score in negative and positive responses respectively.
     As the name implies, empirical TPR and FPR values are evaluated
  for \code{method = "empirical"}. For \code{"binormal"}, the distribution
  of diagnostic are assumed to be normal and maximum likelihood parameters
- are estimated. If \code{method = "nonparametric"}, then kerenel density
+ are estimated. If \code{method = "nonparametric"}, then kernel density
  estimates (using \code{\link[stats:density]{density}}) are applied with
  following bandwidth:
  \itemize{
- \item \eqn{h_Y = 0.9 * min(\sigma_Y, IQR(D_Y)/1.34)/((n_Y)^(1/5))}
+ \item \eqn{h_Y = 0.9 * min(\sigma_Y, IQR(D_Y)/1.34)/((n_Y)^{(1/5)})}
  \item \eqn{h_{\bar{Y}} = 0.9 * min(\sigma_{\bar{Y}},
- IQR(D_{\bar{Y}})/1.34)/((n_{\bar{Y}})^(1/5))}
+ IQR(D_{\bar{Y}})/1.34)/((n_{\bar{Y}})^{(1/5)})}
  }
  as described in Zou et al. From the kernel estimates of PDFs, CDFs are
  estimated using trapezoidal rule.
 
+For \code{"empirical"} ROC, the algorithm firt rank orders the
+data and calculates TPR and FPR by treating all predicted
+up to certain level as positive. If \code{step} is \code{TRUE},
+then the ROC curve is generated based on all the calculated
+\{FPR, TPR\} pairs regardless of tie in the data. If \code{step} is
+\code{FALSE}, then the ROC curve follows a diagonal path for the ties.
 
-     For \code{"empirical"} ROC, trapezoidal rule is
+
+For \code{"empirical"} ROC, trapezoidal rule is
 applied to estimate area under curve (AUC). For \code{"binormal"}, AUC is estimated by
 \eqn{\Phi(A/\sqrt(1 + B^2)}, where \eqn{A} and \eqn{B} are functions
 of mean and variance of the diagnostic in two groups.

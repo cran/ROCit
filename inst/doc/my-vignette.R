@@ -1,4 +1,4 @@
-## ----setup, include = FALSE----------------------------------------------
+## ----setup, include = FALSE---------------------------------------------------
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>"
@@ -37,7 +37,7 @@ legend("bottomright", c("Perfectly Separable",
        lwd = 2, col = c("darkgreen", "gold4", "dodgerblue4",
                         "orange", "red"), bty = "n")
 
-## ----ch1-----------------------------------------------------------------
+## ----ch1----------------------------------------------------------------------
 library(ROCit)
 data("Loan")
 
@@ -45,16 +45,16 @@ data("Loan")
 summary(Loan$Status)
 class(Loan$Status)
 
-## ----ch2-----------------------------------------------------------------
+## ----ch2----------------------------------------------------------------------
 Simple_Y <- convertclass(x = Loan$Status, reference = "FP") 
 
 # charged off rate
 mean(Simple_Y)
 
-## ----ch3-----------------------------------------------------------------
+## ----ch3----------------------------------------------------------------------
 mean(convertclass(x = Loan$Status))
 
-## ----ch4, fig.height=4, fig.width=6,fig.cap="Accuracy vs Cutoff"---------
+## ----ch4, fig.height=4, fig.width=6,fig.cap="Accuracy vs Cutoff"--------------
 data("Diabetes")
 logistic.model <- glm(as.factor(dtest)~chol+age+bmi,
                       data = Diabetes,family = "binomial")
@@ -66,20 +66,20 @@ measure <- measureit(score = score, class = class,
 names(measure)
 plot(measure$ACC~measure$Cutoff, type = "l")
 
-## ----ch5-----------------------------------------------------------------
+## ----ch5----------------------------------------------------------------------
 data("Diabetes")
 summary(Diabetes$dtest)
 summary(as.factor(Diabetes$dtest))
 
-## ----ch6-----------------------------------------------------------------
+## ----ch6----------------------------------------------------------------------
 roc_empirical <- rocit(score = Diabetes$chol, class = Diabetes$dtest,
                        negref = "-") 
 
-## ----ch7-----------------------------------------------------------------
+## ----ch7----------------------------------------------------------------------
 class(roc_empirical)
 methods(class="rocit")
 
-## ----ch8-----------------------------------------------------------------
+## ----ch8----------------------------------------------------------------------
 summary(roc_empirical)
 # function returns
 names(roc_empirical)
@@ -87,7 +87,7 @@ names(roc_empirical)
 message("Number of positive responses used: ", roc_empirical$pos_count)
 message("Number of negative responses used: ", roc_empirical$neg_count)
 
-## ----ch11----------------------------------------------------------------
+## ----ch11---------------------------------------------------------------------
 head(cbind(Cutoff=roc_empirical$Cutoff, 
                  TPR=roc_empirical$TPR, 
                  FPR=roc_empirical$FPR))
@@ -96,7 +96,7 @@ tail(cbind(Cutoff=roc_empirical$Cutoff,
                  TPR=roc_empirical$TPR, 
                  FPR=roc_empirical$FPR))
 
-## ----ch12----------------------------------------------------------------
+## ----ch12---------------------------------------------------------------------
 roc_binormal <- rocit(score = Diabetes$chol, 
                       class = Diabetes$dtest,
                       negref = "-", 
@@ -111,7 +111,7 @@ roc_nonparametric <- rocit(score = Diabetes$chol,
 summary(roc_binormal)
 summary(roc_nonparametric)
 
-## ----ch13, fig.width=6,fig.height=4--------------------------------------
+## ----ch13, fig.width=6,fig.height=4-------------------------------------------
 # Default plot
 plot(roc_empirical, values = F)
 
@@ -125,7 +125,7 @@ plot(roc_binormal, YIndex = F,
 plot(roc_nonparametric, YIndex = F, 
      values = F, legend = F)
 
-## ----ch14, fig.width=6,fig.height=4--------------------------------------
+## ----ch14, fig.width=6,fig.height=4-------------------------------------------
 ## first, fit a logistic model
 logistic.model <- glm(as.factor(dtest)~
                         chol+age+bmi,
@@ -135,7 +135,7 @@ logistic.model <- glm(as.factor(dtest)~
 ## make the score and class
 class <- logistic.model$y
 # score = log odds
-score <- logit(logistic.model$fitted.values)
+score <- qlogis(logistic.model$fitted.values)
 
 ## rocit object
 rocit_emp <- rocit(score = score, 
@@ -163,7 +163,7 @@ legend("bottomright", col = c(1,2,4),
        c("Empirical ROC", "Binormal ROC",
          "Non-parametric ROC"), lwd = 2)
 
-## ----ch15----------------------------------------------------------------
+## ----ch15---------------------------------------------------------------------
 # Default 
 ciAUC(rocit_emp)
 ciAUC(rocit_emp, level = 0.9)
@@ -214,10 +214,10 @@ legend("bottomright", c("Empirical ROC",
        lty = c(1,1,2,2), col = 
          c(1,2,1,2), lwd = c(2,2,1,1))
 
-## ----ch17----------------------------------------------------------------
+## ----ch17---------------------------------------------------------------------
 class(ciROC_emp90)
 
-## ----ch18, fig.height=4, fig.width=6, fig.cap="KS plot"------------------
+## ----ch18, fig.height=4, fig.width=6, fig.cap="KS plot"-----------------------
 data("Diabetes")
 logistic.model <- glm(as.factor(dtest)~
                       chol+age+bmi,
@@ -230,13 +230,13 @@ rocit <- rocit(score = score,
                class = class) #default: empirical
 kplot <- ksplot(rocit)
 
-## ----ch19----------------------------------------------------------------
+## ----ch19---------------------------------------------------------------------
 message("KS Stat (empirical) : ", 
         kplot$`KS stat`)
 message("KS Stat (empirical) cutoff : ", 
         kplot$`KS Cutoff`)
 
-## ----ch20----------------------------------------------------------------
+## ----ch20---------------------------------------------------------------------
 data("Loan")
 class <- Loan$Status
 score <- Loan$Score
@@ -247,7 +247,7 @@ gtable15 <- gainstable(score = score,
                        ngroup = 15)
 
 
-## ----ch21----------------------------------------------------------------
+## ----ch21---------------------------------------------------------------------
 rocit_emp <- rocit(score = score, 
                    class = class, 
                    negref = "FP")
@@ -257,6 +257,6 @@ gtable_custom <- gainstable(rocit_emp,
 print(gtable15)
 print(gtable_custom)
 
-## ----ch22, fig.height=4, fig.width=6, fig.cap="Lift and Cum. Lift plot"----
+## ----ch22, fig.height=4, fig.width=6, fig.cap="Lift and Cum. Lift plot"-------
 plot(gtable15, type = 1)
 

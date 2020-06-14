@@ -41,7 +41,7 @@ print.measureit <- function(x, n = NULL, ... = NULL){
   for(i in 2:length(names(x))){
     temp <- cbind(temp, x[[i]])
   }
-  temp <- as.data.frame(temp)
+  temp <- data.frame(temp)
   names(temp) <- names(x)
 
   if(is.null(n)){
@@ -55,9 +55,11 @@ print.measureit <- function(x, n = NULL, ... = NULL){
       if(n > nrow(temp)){
         n <- nrow(temp)
       }else{
-        n=10
+        n = 10
       }
     }
     print(temp[c(1:n), ])
   }
 }
+
+

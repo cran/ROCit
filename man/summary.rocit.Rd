@@ -23,3 +23,6 @@ summary(roc_empirical)
 
 
 }
+\seealso{
+\code{\link{rocit}}, \code{\link{print.rocit}}
+}

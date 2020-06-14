@@ -4,7 +4,6 @@
 #' characteristic (ROC) curve. This is an S3 method for object of class
 #' \code{"rocit"}, returned by \code{\link{rocit}} function.
 #'
-#' @import graphics
 #'
 #' @param x An object of class \code{"rocit"},
 #' returned by \code{\link{rocit}} function.
@@ -66,21 +65,21 @@ plot.rocit <- function(x, col = c("#2F4F4F", "#BEBEBE"),
 
   y1 <- x$TPR
   x1 <- x$FPR
-  plot(x1, y1, type = "l",
+  graphics::plot(x1, y1, type = "l",
        ylab = "Sensitivity (TPR)",
        xlab = "1-Specificity (FPR)",
        col = col[1], lwd = 2)
-  grid(col = "gray60")
-  abline(0, 1, lwd = 2, col = col[2], lty = 2)
+  graphics::grid(col = "gray60")
+  graphics::abline(0, 1, lwd = 2, col = col[2], lty = 2)
   diff <- y1 - x1
   maxIndex <- which.max(diff)
   xYI <- x1[maxIndex]
   yYI <- y1[maxIndex]
   cYI <- x$Cutoff[maxIndex]
   if(YIndex){
-    points(x = xYI, y = yYI, pch = 16, cex = 1)
-    points(x = xYI, y = yYI, pch = 3, cex = 3)
-    text(x = (xYI + 0.2), y = (yYI - 0.1),
+    graphics::points(x = xYI, y = yYI, pch = 16, cex = 1)
+    graphics::points(x = xYI, y = yYI, pch = 3, cex = 3)
+    graphics::text(x = (xYI + 0.2), y = (yYI - 0.1),
          "Optimal (Youden Index) point", font = 3)
   }
 
@@ -91,7 +90,7 @@ plot.rocit <- function(x, col = c("#2F4F4F", "#BEBEBE"),
   maintext <- paste(methodName, "ROC plot")
 
   if(legend){
-    legend(legendpos,
+    graphics::legend(legendpos,
            c(paste(methodName, "ROC curve"), "Chance line"),
            lty = c(1, 2), lwd = 2, col = col)
   }

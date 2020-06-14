@@ -204,7 +204,7 @@ gainstable.default <- function(score, class, negref = NULL,
     )
   }
 
-  tempdata <- as.data.frame(t(apply(matrix(1:ngroup), 1, temfun)))
+  tempdata <- data.frame(t(apply(matrix(1:ngroup), 1, temfun)))
   Bucket <- 1:ngroup
   Depth <- cumNobs / ls
   tempdata <- cbind(Bucket, Obs = Nobs, CObs = cumNobs,

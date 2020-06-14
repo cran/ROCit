@@ -45,8 +45,8 @@
 #' @export
 ciROCbin <- function(rocit_bin, level, nboot){
 
-  argClass <- class(rocit_bin)
-  if(argClass != "rocit"){
+  #argClass <- class(rocit_bin)
+  if(!(methods::is(rocit_bin, "rocit"))){
     stop("Argument is not of class \"rocit\" ")
   }
 

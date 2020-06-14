@@ -484,7 +484,7 @@ plot(measure$ACC~measure$Cutoff, type = "l")
 `rocit` is the main function of ROCit package. With the diagnostic score and the class of each observation, it calculates true positive rate (sensitivity) and false positive rate (1-Specificity) at convenient cutoff values to construct ROC curve. The function returns "rocit" object, which can be passed as arguments for other S3 methods.
 
 
-`Diabetes` data contains information on 403 subjects from 1046 subjects who were interviewed in a study to understand the prevalence of obesity, diabetes, and other cardiovascular risk factors in central Virginia for African Americans. According to Dr John Hong, Diabetes Mellitus Type II (adult onset diabetes) is associated most strongly with obesity. The waist/hip ratio may be a predictor in diabetes and heart disease. DM II is also associated with hypertension - they may both be part of "Syndrome X". The 403 subjects were the ones who were actually screened for diabetes. Glycosolated hemoglobin > 7.0 is usually taken as a positive diagnosis of diabetes.
+`Diabetes` data contains information on 403 subjects from 1046 subjects who were interviewed in a study to understand the prevalence of obesity, diabetes, and other cardiovascular risk factors in central Virginia for African Americans. According to Dr John Hong, Diabetes Mellitus Type II (adult onset diabetes) is associated most strongly with obesity. The waist/hip ratio may be a predictor in diabetes and heart disease. DM II is also associated with hypertension - they may both be part of "Syndrome X". The 403 subjects were the ones who were actually screened for diabetes. Glycosylated hemoglobin > 7.0 is usually taken as a positive diagnosis of diabetes.
 
 
 In the data, the `dtest` variable indicates whether `glyhb` is greater than 7 or not. 
@@ -596,7 +596,7 @@ logistic.model <- glm(as.factor(dtest)~
 ## make the score and class
 class <- logistic.model$y
 # score = log odds
-score <- logit(logistic.model$fitted.values)
+score <- qlogis(logistic.model$fitted.values)
 
 ## rocit object
 rocit_emp <- rocit(score = score, 

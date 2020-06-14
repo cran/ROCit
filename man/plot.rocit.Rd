@@ -4,9 +4,15 @@
 \alias{plot.rocit}
 \title{Plot ROC Curve}
 \usage{
-\method{plot}{rocit}(x, col = c("#2F4F4F", "#BEBEBE"), legend = TRUE,
-  legendpos = "bottomright", YIndex = TRUE, values = TRUE,
-  ... = NULL)
+\method{plot}{rocit}(
+  x,
+  col = c("#2F4F4F", "#BEBEBE"),
+  legend = TRUE,
+  legendpos = "bottomright",
+  YIndex = TRUE,
+  values = TRUE,
+  ... = NULL
+)
 }
 \arguments{
 \item{x}{An object of class \code{"rocit"},

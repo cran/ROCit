@@ -24,6 +24,11 @@
 #' \code{"empirical"}, \code{"binormal"} and \code{"nonparametric"}.
 #' Pattern matching allowed thorough \code{\link[base:grep]{grep}}.
 #'
+#' @param step Logical, default in \code{FALSE}. Only applicable for
+#' \code{empirical} method and ignored for others. Indicates
+#' whether only horizontal and vertical steps should be used
+#' to produce the ROC curve. See "Details".
+#'
 #'
 #' @details ROC curve is defined as the set of ordered pairs,
 #' \eqn{(FPR(c), TPR(c))}, where, \eqn{-\infty < c < \infty},
@@ -38,19 +43,26 @@
 #'     As the name implies, empirical TPR and FPR values are evaluated
 #'  for \code{method = "empirical"}. For \code{"binormal"}, the distribution
 #'  of diagnostic are assumed to be normal and maximum likelihood parameters
-#'  are estimated. If \code{method = "nonparametric"}, then kerenel density
+#'  are estimated. If \code{method = "nonparametric"}, then kernel density
 #'  estimates (using \code{\link[stats:density]{density}}) are applied with
 #'  following bandwidth:
 #'  \itemize{
-#'  \item \eqn{h_Y = 0.9 * min(\sigma_Y, IQR(D_Y)/1.34)/((n_Y)^(1/5))}
+#'  \item \eqn{h_Y = 0.9 * min(\sigma_Y, IQR(D_Y)/1.34)/((n_Y)^{(1/5)})}
 #'  \item \eqn{h_{\bar{Y}} = 0.9 * min(\sigma_{\bar{Y}},
-#'  IQR(D_{\bar{Y}})/1.34)/((n_{\bar{Y}})^(1/5))}
+#'  IQR(D_{\bar{Y}})/1.34)/((n_{\bar{Y}})^{(1/5)})}
 #'  }
 #'  as described in Zou et al. From the kernel estimates of PDFs, CDFs are
 #'  estimated using trapezoidal rule.
 #'
+#' For \code{"empirical"} ROC, the algorithm firt rank orders the
+#' data and calculates TPR and FPR by treating all predicted
+#' up to certain level as positive. If \code{step} is \code{TRUE},
+#' then the ROC curve is generated based on all the calculated
+#' \{FPR, TPR\} pairs regardless of tie in the data. If \code{step} is
+#' \code{FALSE}, then the ROC curve follows a diagonal path for the ties.
 #'
-#'      For \code{"empirical"} ROC, trapezoidal rule is
+#'
+#' For \code{"empirical"} ROC, trapezoidal rule is
 #' applied to estimate area under curve (AUC). For \code{"binormal"}, AUC is estimated by
 #' \eqn{\Phi(A/\sqrt(1 + B^2)}, where \eqn{A} and \eqn{B} are functions
 #' of mean and variance of the diagnostic in two groups.
@@ -62,6 +74,9 @@
 #' \Phi(
 #'   \frac{D_{Y_j}-D_{{\bar{Y}}_i}}{\sqrt{h_Y^2+h_{\bar{Y}}^2}}
 #'  )}
+#'
+#'
+#'
 #'
 #' @return A list of class \code{"rocit"}, having following elements:
 #' \item{method}{The method applied to estimate ROC curve.}
@@ -118,7 +133,8 @@
 #'
 #'
 #' @export
-rocit <- function(score, class, negref = NULL, method = "empirical"){
+rocit <- function(score, class, negref = NULL, method = "empirical",
+                  step = FALSE){
   if (length(score) != length(class)) {
     stop("score and class differ in length")
   }
@@ -130,11 +146,14 @@ rocit <- function(score, class, negref = NULL, method = "empirical"){
   classNA <- which(is.na(class))
   unionNA <- union(scoreNA, classNA)
 
+  na_cases <- FALSE
   if(length(unionNA) > 0){
-    message("removing NA(s) from score and/or class")
+    # message("removing NA(s) from score and/or class")
     score <- score[-unionNA]
     class <- class[-unionNA]
-    message("NA(s) removed")
+    na_cases <- TRUE
+    na_msg <- "NA(s) in score and/or class, removed from the data."
+    # message("NA(s) removed")
   }
 
   if (!is.null(negref)) {
@@ -143,7 +162,7 @@ rocit <- function(score, class, negref = NULL, method = "empirical"){
     }
   }
 
-  if(length(method)>1) {
+  if(length(method) > 1) {
     stop("rocit cannot deal with multiple methods")
   }
 
@@ -152,31 +171,36 @@ rocit <- function(score, class, negref = NULL, method = "empirical"){
   if(!identical(grep(method, "empirical", fixed = T), integer(0))){
     convertedclass <- convertclass(class, reference = negref)
     tempdata <- rankorderdata(score, convertedclass)
+
+
     D <- tempdata[, 1]
     Y <- tempdata[, 2]
-    posIndex <- which(Y == 1)
-    negIndex <- which(Y == 0)
-    DY <- D[posIndex]
-    DYbar <- D[negIndex]
+
+    Ybar <- 1 - Y
+    DY <- D[which(Y == 1)]
+    DYbar <- D[which(Y == 0)]
     nY <- sum(Y)
-    n <- length(D)
-    nYbar <- n - nY
-    tempfun1 <- function(j) gettptnfpfn(x = Y, depth = j, nY, nYbar)
-    tempdata <- t(apply(matrix(1:n), 1, tempfun1))
-    Cutoff <- c(Inf, D,-Inf)
-    TP <- c(0, tempdata[, 1], tempdata[, 1][n])
-    FP <- c(0, tempdata[, 2], tempdata[, 2][n])
-    TN <- c(nYbar, tempdata[, 3], tempdata[, 3][n])
-    FN <- c(nY, tempdata[, 4], tempdata[, 4][n])
-    TPR <- TP / (TP + FN)
-    FPR <- FP / (FP + TN)
-    tempmat <- cbind(FPR, TPR)
-    uniqueIndex <- !duplicated(t(apply(tempmat, 1, sort)))
-    tempmat <- tempmat[uniqueIndex, ]
-    Cutoff <- Cutoff[uniqueIndex]
-    FPR <- tempmat[, 1]
-    TPR <- tempmat[, 2]
+    nYbar <- sum(Ybar)
+
+    TP <- cumsum(Y)
+    FP <- cumsum(Ybar)
+    TPR <- TP / nY
+    FPR <- FP / nYbar
+    Cutoff <- D
+    if(!step){
+      df <- data.frame(cbind(index = 1:(nY + nYbar), D))
+      revdf <- df[rev(row.names(df)), ]
+      keep <- rev(revdf$index[!duplicated(revdf$D)])
+      TPR <- TPR[keep]
+      FPR <- FPR[keep]
+      Cutoff <- Cutoff[keep]
+    }
+
+    TPR <- c(0, TPR)
+    FPR <- c(0, FPR)
+    Cutoff <- c(Inf, Cutoff)
     AUC <- trapezoidarea(FPR, TPR)
+
 
     returnval <- list(method = "empirical",
                       pos_count = nY, neg_count = nYbar,
@@ -184,6 +208,9 @@ rocit <- function(score, class, negref = NULL, method = "empirical"){
                       AUC = AUC, Cutoff = Cutoff, TPR = TPR, FPR = FPR)
 
     class(returnval) <- "rocit"
+    if(na_cases){
+      warning(na_msg)
+    }
     return(returnval)
   }
 
@@ -220,6 +247,9 @@ rocit <- function(score, class, negref = NULL, method = "empirical"){
                       param = list(posparam = posparam, negparam = negparam),
                       TPR = TPR, FPR = FPR)
     class(returnval) <- "rocit"
+    if(na_cases){
+      warning(na_msg)
+    }
     return(returnval)
   }
 
@@ -284,7 +314,15 @@ rocit <- function(score, class, negref = NULL, method = "empirical"){
                       pos_D = DY, neg_D = DYbar,
                       AUC = AUC, Cutoff = Cutoff, TPR = TPR, FPR = FPR)
     class(returnval) <- "rocit"
+    if(na_cases){
+      warning(na_msg)
+    }
     return(returnval)
   }
   stop("supplied method is not valid")
 }
+
+
+
+
+

@@ -4,8 +4,14 @@
 \alias{measureit.default}
 \title{Performance Metrics of Binary Classifier}
 \usage{
-\method{measureit}{default}(score, class, negref = NULL,
-  measure = c("ACC", "SENS"), ... = NULL)
+\method{measureit}{default}(
+  score,
+  class,
+  negref = NULL,
+  measure = c("ACC", "SENS"),
+  step = FALSE,
+  ... = NULL
+)
 }
 \arguments{
 \item{score}{An numeric array of diagnostic score.}
@@ -23,13 +29,22 @@ set alphabetically.}
 \item{measure}{The performance metrics to be evaluated. See "Details"
 for available options.}
 
+\item{step}{Logical, default in \code{FALSE}.The algorithm used in
+\code{measureit} first rank orders the
+data and calculates TP, FP, TN, FN by treating all predicted
+up to certain level as positive. If \code{step} is \code{TRUE},
+then these numbers are evaluated for all the observations,
+regardless of tie in the data. If \code{step} is
+\code{FALSE}, only one set of stats are retained for a single value of
+\code{D}.}
+
 \item{...}{\code{NULL}. Used for S3 generic/method consistency.}
 }
 \value{
 An object of class \code{"measureit"}. By default it contains the
 followings:
 \item{Cutoff}{Cutoff at which metrics are evaluated.}
-\item{Depth}{What portion of the observations fall on above the cutoff.}
+\item{Depth}{What portion of the observations fall on or above the cutoff.}
 \item{TP}{Number of true positives, when the observations having
 score equal or greater than cutoff are predicted positive.}
 \item{FP}{Number of false positives, when the observations having
@@ -85,7 +100,7 @@ either \code{score} or \code{class}, then removed.
 }
 \examples{
 data("Diabetes")
-logistic.model <- glm(as.factor(dtest)~chol+age+bmi,
+logistic.model <- glm(factor(dtest)~chol+age+bmi,
                       data = Diabetes,family = "binomial")
 class <- logistic.model$y
 score <- logistic.model$fitted.values

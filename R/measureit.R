@@ -13,11 +13,6 @@ measureit <- function(...){
   UseMethod("measureit")
 }
 
-
-
-
-
-
 #' @title Performance Metrics of Binary Classifier
 #'
 #' @description This function  computes various performance metrics
@@ -37,13 +32,24 @@ measureit <- function(...){
 #'
 #' @param measure The performance metrics to be evaluated. See "Details"
 #' for available options.
+#'
+#' @param step Logical, default in \code{FALSE}.The algorithm used in
+#' \code{measureit} first rank orders the
+#' data and calculates TP, FP, TN, FN by treating all predicted
+#' up to certain level as positive. If \code{step} is \code{TRUE},
+#' then these numbers are evaluated for all the observations,
+#' regardless of tie in the data. If \code{step} is
+#' \code{FALSE}, only one set of stats are retained for a single value of
+#' \code{D}.
+#'
+#'
 #' @param ... \code{NULL}. Used for S3 generic/method consistency.
 #'
 #'
 #' @return An object of class \code{"measureit"}. By default it contains the
 #' followings:
 #' \item{Cutoff}{Cutoff at which metrics are evaluated.}
-#' \item{Depth}{What portion of the observations fall on above the cutoff.}
+#' \item{Depth}{What portion of the observations fall on or above the cutoff.}
 #' \item{TP}{Number of true positives, when the observations having
 #' score equal or greater than cutoff are predicted positive.}
 #' \item{FP}{Number of false positives, when the observations having
@@ -98,7 +104,7 @@ measureit <- function(...){
 #' \code{score}. In case of tie, sorting is done with respect to \code{class}.
 #' @examples
 #' data("Diabetes")
-#' logistic.model <- glm(as.factor(dtest)~chol+age+bmi,
+#' logistic.model <- glm(factor(dtest)~chol+age+bmi,
 #'                       data = Diabetes,family = "binomial")
 #' class <- logistic.model$y
 #' score <- logistic.model$fitted.values
@@ -113,7 +119,7 @@ measureit <- function(...){
 #' @method measureit default
 #' @export
 measureit.default <- function(score, class, negref = NULL,
-                    measure = c("ACC", "SENS"), ... = NULL) {
+                    measure = c("ACC", "SENS"), step = FALSE, ... = NULL) {
   if(length(score) != length(class)) {
     stop("score and class differ in length")
   }
@@ -128,11 +134,15 @@ measureit.default <- function(score, class, negref = NULL,
   classNA <- which(is.na(class))
   unionNA <- union(scoreNA, classNA)
 
+
+  na_cases <- FALSE
   if(length(unionNA) > 0){
-    message("removing NA(s) from score and/or class")
+    # message("removing NA(s) from score and/or class")
     score <- score[-unionNA]
     class <- class[-unionNA]
-    message("NA(s) removed")
+    na_cases <- TRUE
+    na_msg <- "NA(s) in score and/or class, removed from the data."
+    # message("NA(s) removed")
   }
 
 
@@ -148,23 +158,61 @@ measureit.default <- function(score, class, negref = NULL,
   tempdata <- rankorderdata(score, convertedclass)
   D <- tempdata[, 1]
   Y <- tempdata[, 2]
+
+  Ybar <- 1 - Y
+  # DY <- D[which(Y == 1)]
+  # DYbar <- D[which(Y == 0)]
   nY <- sum(Y)
-  n <- length(D)
-  nYbar <- n - nY
+  nYbar <- sum(Ybar)
 
-  tempfun <- function(j){
-    gettptnfpfn(x=Y, depth = j, nY, nYbar)
+  TP <- cumsum(Y)
+  FP <- cumsum(Ybar)
+  TN <- nYbar - FP
+  FN <- nY - TP
+  Depth <- c(1:(nY + nYbar)) / (nY + nYbar)
+  Cutoff <- D
+
+  if(!step){
+    df <- data.frame(cbind(index = 1:(nY + nYbar), D))
+    revdf <- df[rev(row.names(df)), ]
+    keep <- rev(revdf$index[!duplicated(revdf$D)])
+    TP <- TP[keep]
+    FP <- FP[keep]
+    TN <- TN[keep]
+    FN <- FN[keep]
+    Depth <- Depth[keep]
+    Cutoff <- Cutoff[keep]
   }
-  tempdata <- t(apply(matrix(1:n), 1, tempfun))
 
-  Cutoff <- c(Inf, D,-Inf)
-  Depth <- c(0, (1:n) / n, 1)
-  TP <- c(0, tempdata[, 1], tempdata[, 1][n])
-  FP <- c(0, tempdata[, 2], tempdata[, 2][n])
-  TN <- c(nYbar, tempdata[, 3], tempdata[, 3][n])
-  FN <- c(nY, tempdata[, 4], tempdata[, 4][n])
+  Depth <- c(0, Depth)
+  Cutoff <- c(Inf, Cutoff)
+  TP <- c(0, TP)
+  FP <- c(0, FP)
+  TN <- c(nYbar, TN)
+  FN <- c(nY, FN)
+
+
+  # nY <- sum(Y)
+  # n <- length(D)
+  # nYbar <- n - nY
+  # tempfun <- function(j){
+  #   gettptnfpfn(x=Y, depth = j, nY, nYbar)
+  # }
+  # tempdata <- t(apply(matrix(1:n), 1, tempfun))
+  # Cutoff <- c(Inf, D,-Inf)
+  # Depth <- c(0, (1:n) / n, 1)
+  # TP <- c(0, tempdata[, 1], tempdata[, 1][n])
+  # FP <- c(0, tempdata[, 2], tempdata[, 2][n])
+  # TN <- c(nYbar, tempdata[, 3], tempdata[, 3][n])
+  # FN <- c(nY, tempdata[, 4], tempdata[, 4][n])
+
+
+
+
   tempdata <- cbind(Cutoff = Cutoff, Depth = Depth,
                     TP = TP, FP = FP, TN = TN, FN = FN)
+
+
 
   if("ACC" %in% measure) {
     ACC <- (TP + TN) / (TP + FP + TN + FN)
@@ -300,8 +348,11 @@ measureit.default <- function(score, class, negref = NULL,
     FSCR <- 2 * (FSCRterm1 * FSCRterm2)/(FSCRterm1 + FSCRterm2)
     tempdata <- cbind(tempdata, FSCR)
   }
-  retval <- as.data.frame(tempdata)
+  retval <- data.frame(tempdata)
   class(retval) = "measureit"
+  if(na_cases){
+    warning(na_msg)
+  }
   return(retval)
 }
 

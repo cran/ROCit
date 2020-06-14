@@ -1,6 +1,10 @@
+
+
+
+
+
 #' @title Get number of TP, FP, TN and FN
 #'
-#' @import stats
 #'
 #' @description Function \code{gettptnfpfn} calculates the number of
 #' true positive (TP), false positive (FP),
@@ -23,26 +27,19 @@
 #' @return A numeric vector of length 4 indicating number of TP , FP, TN, FN,
 #' respectively.
 #'
-#'
-#' @section Comment:
-#' \code{gettptnfpfn} is used internally in other function(s) of \pkg{ROCit}.
-#' Invalid results are produced for depth = 0.
-#'
-#' @examples
-#' k <- c(1,1,0,1,0,0,1,0,0,0,1,0,0,0)
-#' # get TP, FP, TN, FN if first 6 are predicted to be positives
-#' gettptnfpfn(k, 6)
-#'
+#' @name gettptnfpfn-defunct
+#' @usage gettptnfpfn(x, depth, npos = sum(x), nneg = length(x) - npos)
+#' @seealso \code{\link{ROCit-defunct}}
+#' @keywords internal
+NULL
+
+#' @rdname ROCit-defunct
 #'
 #' @export
 gettptnfpfn <- function(x, depth, npos = sum(x), nneg = length(x) - npos){
-  tp <- sum(x[1:depth])
-  fp <- depth - sum(x[1:depth])
-  tn <- sum((!x) * c(rep(0, depth), rep(1, npos+nneg-depth)))
-  fn <- npos+nneg-tp-fp-tn
-  return(c(tp, fp, tn, fn))
+  .Defunct(new = NULL, package = NULL,
+           msg = '"gettptnfpfn" has been removed from package ROCit.')
 }
-
 
 
 

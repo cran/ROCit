@@ -41,6 +41,10 @@ ciAUC <- function(object, ...){
 #' Default is NULL. If a numeric value is specified, overrides
 #' \code{logit} and \code{delong} arguments.
 #'
+#' @param step Logical, default in \code{FALSE}.  See \code{\link{rocit}}.
+#'
+#'
+#'
 #' @param ... \code{NULL}. Used for S3 generic/method consistency.
 #'
 #'
@@ -63,7 +67,7 @@ ciAUC <- function(object, ...){
 #' @method ciAUC rocit
 #' @export
 ciAUC.rocit <- function(object, level = 0.95, delong = FALSE, logit = FALSE,
-                        nboot = NULL, ... = NULL)
+                        nboot = NULL, step = FALSE, ... = NULL)
 {
   if (level < 0 || level > 1) {
     stop("level must be within 0 and 1")
@@ -89,24 +93,33 @@ ciAUC.rocit <- function(object, level = 0.95, delong = FALSE, logit = FALSE,
 
       score <- c(pos_D, neg_D)
       class <- c(rep(1, nY), rep(0, nYbar))
-      convertedclass <- convertclass(class, reference = 0)
-      tempdata <- rankorderdata(score, convertedclass)
-      D <- tempdata[, 1]
-      Y <- tempdata[, 2]
-      n <- nY + nYbar
-      tempfun <- function(j)
-        gettptnfpfn(x = Y, depth = j, nY, nYbar)
-      tempdata <- t(apply(matrix(1:n), 1, tempfun))
 
-      Cutoff <- c(Inf, D,-Inf)
-      TP <- c(0, tempdata[, 1], tempdata[, 1][n])
-      FP <- c(0, tempdata[, 2], tempdata[, 2][n])
-      TN <- c(nYbar, tempdata[, 3], tempdata[, 3][n])
-      FN <- c(nY, tempdata[, 4], tempdata[, 4][n])
-      TPR <- TP / (TP + FN)
-      FPR <- FP / (FP + TN)
-      return(trapezoidarea(FPR, TPR))
+
+      return(rocit(score = score, class = class, step = step)$AUC)
+
+
+
+
+      # convertedclass <- convertclass(class, reference = 0)
+      # tempdata <- rankorderdata(score, convertedclass)
+      # D <- tempdata[, 1]
+      # Y <- tempdata[, 2]
+      # n <- nY + nYbar
+      # tempfun <- function(j)
+      #   gettptnfpfn(x = Y, depth = j, nY, nYbar)
+      # tempdata <- t(apply(matrix(1:n), 1, tempfun))
+      #
+      # Cutoff <- c(Inf, D,-Inf)
+      # TP <- c(0, tempdata[, 1], tempdata[, 1][n])
+      # FP <- c(0, tempdata[, 2], tempdata[, 2][n])
+      # TN <- c(nYbar, tempdata[, 3], tempdata[, 3][n])
+      # FN <- c(nY, tempdata[, 4], tempdata[, 4][n])
+      # TPR <- TP / (TP + FN)
+      # FPR <- FP / (FP + TN)
+      # return(trapezoidarea(FPR, TPR))
     }
+
+
     loQuantile <- (1 - level) / 2
     upQuantile <- level + loQuantile
     seeds <- round(runif(nboot, 1, (1000 * nboot)))
@@ -149,12 +162,12 @@ ciAUC.rocit <- function(object, level = 0.95, delong = FALSE, logit = FALSE,
       upper <- min((AUC + multiplier * SE_AUC), 1)
       lower <- max((AUC - multiplier * SE_AUC), 0)
     } else{
-      logitAUC <- logit(AUC)
+      logitAUC <- qlogis(AUC)
       multiplier2 <- SE_AUC / (AUC * (1 - AUC))
       logitupper <- logitAUC + multiplier * multiplier2
       logitlower <- logitAUC - multiplier * multiplier2
-      upper <- invlogit(logitupper)
-      lower <- invlogit(logitlower)
+      upper <- plogis(logitupper)
+      lower <- plogis(logitlower)
     }
 
     comment <- "CI of AUC"

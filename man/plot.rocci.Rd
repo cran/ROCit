@@ -4,9 +4,16 @@
 \alias{plot.rocci}
 \title{Plot ROC Curve with confidence limits}
 \usage{
-\method{plot}{rocci}(x, col = c("#2F4F4F", "#404040"), lty = c(1, 2),
-  lwd = c(2, 1), grid = TRUE, legend = TRUE,
-  legendpos = "bottomright", ... = NULL)
+\method{plot}{rocci}(
+  x,
+  col = c("#2F4F4F", "#404040"),
+  lty = c(1, 2),
+  lwd = c(2, 1),
+  grid = TRUE,
+  legend = TRUE,
+  legendpos = "bottomright",
+  ... = NULL
+)
 }
 \arguments{
 \item{x}{An object of class \code{"rocci"},

@@ -6,7 +6,6 @@
 #' \code{"rocci"}, returned by \code{\link{ciROC.rocit}} function.
 #'
 #'
-#' @import graphics
 #'
 #' @param x An object of class \code{"rocci"},
 #' returned by \code{\link{ciROC.rocit}} function.
@@ -61,12 +60,12 @@ plot.rocci <- function(x, col = c("#2F4F4F","#404040"), lty = c(1,2),
   lty <- rep(lty, 2)
   lwd <- rep(lwd, 2)
 
-  plot(x$TPR~x$FPR, xlab = "1 - Specificity (FPR)",
+  graphics::plot(x$TPR~x$FPR, xlab = "1 - Specificity (FPR)",
        ylab = "Sensitivity (TPR)", type = "l",
        col = col[1], lwd = lwd[1], lty = lty[1])
-  if(grid) grid()
-  lines(x$LowerTPR~x$FPR, lty = lty[2], lwd = lwd[2], col = col[2])
-  lines(x$UpperTPR~x$FPR, lty = lty[2], lwd = lwd[2], col = col[2])
+  if(grid) graphics::grid()
+  graphics::lines(x$LowerTPR~x$FPR, lty = lty[2], lwd = lwd[2], col = col[2])
+  graphics::lines(x$UpperTPR~x$FPR, lty = lty[2], lwd = lwd[2], col = col[2])
   if(legend){
     method <- x$`ROC estimation method`
     method <- paste0(toupper(substr(method,1,1)),substr(method,2,nchar(method)))
@@ -74,7 +73,7 @@ plot.rocci <- function(x, col = c("#2F4F4F","#404040"), lty = c(1,2),
     level <- x$`Confidence level`
     level <- paste0(round(as.numeric(substr(level, 1,nchar(level)-1)),2),"%")
     kotha_2 <- paste(level, "Confidence Interval")
-    legend(legendpos, c(kotha_1, kotha_2), lty = c(lty[1], lty[2]),
+    graphics::legend(legendpos, c(kotha_1, kotha_2), lty = c(lty[1], lty[2]),
            lwd = c(lwd[1], lwd[2]), col = c(col[1], col[2]))
   }
 }

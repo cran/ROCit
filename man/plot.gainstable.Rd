@@ -4,8 +4,14 @@
 \alias{plot.gainstable}
 \title{Plot \code{"gainstable"} Object}
 \usage{
-\method{plot}{gainstable}(x, y = NULL, type = 1, col = c("#BEBEBE",
-  "#26484F", "#8B4500"), legend = TRUE, ... = NULL)
+\method{plot}{gainstable}(
+  x,
+  y = NULL,
+  type = 1,
+  col = c("#BEBEBE", "#26484F", "#8B4500"),
+  legend = TRUE,
+  ... = NULL
+)
 }
 \arguments{
 \item{x}{An object of class \code{"gainstable"}, created with

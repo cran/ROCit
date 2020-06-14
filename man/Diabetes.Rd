@@ -4,7 +4,8 @@
 \name{Diabetes}
 \alias{Diabetes}
 \title{Diabetes Data}
-\format{A data frame with 403 rows and 22 variables (See "Note"):
+\format{
+A data frame with 403 rows and 22 variables (See "Note"):
 \describe{
   \item{id}{Subject id}
   \item{chol}{Total cholesterol}
@@ -30,7 +31,8 @@
   \item{bmi}{Body mass index}
   \item{dtest}{An indicator whether \code{glyhb} is greater than 7 or not}
   \item{whr}{Waist to hip ratio}
- }}
+ }
+}
 \source{
 staff.pubhealth.ku.dk/~tag/Teaching/share/data/Diabetes.html#sec-2
 }

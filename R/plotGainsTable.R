@@ -3,7 +3,6 @@
 #' @description An S3 method to make different plots using
 #' entries of gains table.
 #'
-#' @import graphics
 #'
 #'
 #' @param x An object of class \code{"gainstable"}, created with
@@ -87,21 +86,21 @@ plot.gainstable <- function(x, y = NULL, type = 1,
     y2 <- x$CLift
     ymax <- max(c(max(y1), max(y2))) * 1.1
 
-    plot(y1~xx, type = "o", pch = 15, col = col[1], lwd = 2,
+    graphics::plot(y1~xx, type = "o", pch = 15, col = col[1], lwd = 2,
          ylab = "Lift,  Cum. Lift", xlim=c(0,100),
          xlab = "Population depth (%)", ylim = c(0, ymax), xaxt = "none")
-    lines(y2~xx, type = "o", pch=16, cex=1.2,
+    graphics::lines(y2~xx, type = "o", pch=16, cex=1.2,
           col = col[2], lwd = 2)
 
-    grid(ny = NULL, nx = NA, col = "gray50")
+    graphics::grid(ny = NULL, nx = NA, col = "gray50")
     xaxismark <- seq(10, 90, 20)
-    abline(v = xaxismark, lty = 3, col = "gray50")
+    graphics::abline(v = xaxismark, lty = 3, col = "gray50")
     xaxismark <- seq(0, 100, 20)
-    abline(v = xaxismark, lty = 3, col = "gray50")
-    axis(1, at = xaxismark, labels = xaxismark)
-    abline(h=1, lwd = 1.5, lty = 2, col = col[3])
+    graphics::abline(v = xaxismark, lty = 3, col = "gray50")
+    graphics::axis(1, at = xaxismark, labels = xaxismark)
+    graphics::abline(h=1, lwd = 1.5, lty = 2, col = col[3])
     if(legend){
-      legend("topright", c("Lift", "Cumulative Lift"),
+      graphics::legend("topright", c("Lift", "Cumulative Lift"),
              lwd = 2, lty = 1, pch = 15:16,
              col = c(col[1], col[2]))
     }
@@ -113,22 +112,22 @@ plot.gainstable <- function(x, y = NULL, type = 1,
     y2 <- x$CRespRate
     ymax <- max(c(max(y1), max(y2))) * 1.1
 
-    plot(y1~xx, type = "o", pch = 15, col = col[1], lwd = 2,
+    graphics::plot(y1~xx, type = "o", pch = 15, col = col[1], lwd = 2,
          ylab = "Resp. Rate,  Cum. Resp. Rate", xlim=c(0,100),
          xlab = "Population depth (%)", ylim = c(0, ymax), xaxt = "none")
-    lines(y2~xx, type = "o", pch=16, cex=1.2,
+    graphics::lines(y2~xx, type = "o", pch=16, cex=1.2,
           col = col[2], lwd = 2)
 
-    grid(ny = NULL, nx = NA, col = "gray50")
+    graphics::grid(ny = NULL, nx = NA, col = "gray50")
     xaxismark <- seq(10, 90, 20)
-    abline(v = xaxismark, lty = 3, col = "gray50")
+    graphics::abline(v = xaxismark, lty = 3, col = "gray50")
     xaxismark <- seq(0,100,20)
-    abline(v = xaxismark, lty = 3, col = "gray50")
-    axis(1, at = xaxismark, labels = xaxismark)
-    abline(h=y2[length(y2)], lwd = 1.5, lty = 2, col = col[3])
+    graphics::abline(v = xaxismark, lty = 3, col = "gray50")
+    graphics::axis(1, at = xaxismark, labels = xaxismark)
+    graphics::abline(h=y2[length(y2)], lwd = 1.5, lty = 2, col = col[3])
 
     if(legend){
-      legend("topright", c("Response Rate", "Cumulative Response Rate"),
+      graphics::legend("topright", c("Response Rate", "Cumulative Response Rate"),
              lwd = 2, lty = 1, pch = 15:16,
              col = c(col[1], col[2]))
     }
@@ -139,20 +138,20 @@ plot.gainstable <- function(x, y = NULL, type = 1,
     y1 <- x$CCapRate
     ymax <- 1.1
 
-    plot(y1~xx, type = "o", pch = 15, col = col[1], lwd = 2,
+    graphics::plot(y1~xx, type = "o", pch = 15, col = col[1], lwd = 2,
          ylab = "Cum. Cap. Rate", xlim=c(0,100),
          xlab = "Population depth (%)", ylim = c(0, ymax), xaxt = "none")
 
-    grid(ny = NULL, nx = NA, col = "gray50")
+    graphics::grid(ny = NULL, nx = NA, col = "gray50")
     xaxismark <- seq(10, 90, 20)
-    abline(v = xaxismark, lty = 3, col = "gray50")
+    graphics::abline(v = xaxismark, lty = 3, col = "gray50")
     xaxismark <- seq(0, 100, 20)
-    abline(v = xaxismark, lty = 3, col = "gray50")
-    axis(1, at = xaxismark, labels = xaxismark)
-    abline(0,0.01, lwd = 1.5, lty = 2, col = col[2])
+    graphics::abline(v = xaxismark, lty = 3, col = "gray50")
+    graphics::axis(1, at = xaxismark, labels = xaxismark)
+    graphics::abline(0,0.01, lwd = 1.5, lty = 2, col = col[2])
 
     if(legend){
-      legend("bottomright", c("Cumulative Capture Rate"),
+      graphics::legend("bottomright", c("Cumulative Capture Rate"),
              lwd = 2, lty = 1, pch = 15,
              col = col[1])
     }

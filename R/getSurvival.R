@@ -28,15 +28,18 @@
 #'
 #' @export
 getsurvival <- function(x, cutoff){
-  c <- class(x)
-  if(c != "density"){
+  if(!(methods::is(x, "density"))){
     stop("x is not of class \"density\" ")
   }
   density <- x
   densityxvals <- density$x
-  indexes <- which(densityxvals>=cutoff)
-  trapezoidarea(densityxvals[indexes],density$y[indexes])
+  indexes <- which(densityxvals >= cutoff)
+  trapezoidarea(densityxvals[indexes], density$y[indexes])
 }
+
+
+
+
 
 
 

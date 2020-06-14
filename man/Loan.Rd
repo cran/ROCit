@@ -4,7 +4,8 @@
 \name{Loan}
 \alias{Loan}
 \title{Loan Data}
-\format{A data frame with 900 rows and 9 variables:
+\format{
+A data frame with 900 rows and 9 variables:
 \describe{
   \item{Amount}{Amount of loan, shown as
   percentage of a certain amount.}
@@ -29,7 +30,8 @@
   annual income. The log-odds of  logistic regression were transformed into
   scores using \eqn{PDO = 30}, \eqn{OddsBase = 20} and \eqn{ScoreBase = 400}.
   See "References".}
-}}
+}
+}
 \source{
 \url{http://www.lendingclub.com/info/download-data.action}
 }

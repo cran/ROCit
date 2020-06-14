@@ -31,10 +31,10 @@ trapezoidarea <- function(x,y){
   if(length(x)!=length(y)){
     stop("x and y differ in lengths")
   }
-  cond1 <- (class(x) == "integer")
-  cond2 <- (class(x) == "numeric")
-  cond3 <- (class(y) == "integer")
-  cond4 <- (class(y) == "numeric")
+  cond1 <- methods::is(x, "integer")
+  cond2 <- methods::is(x, "numeric")
+  cond3 <- methods::is(y, "integer")
+  cond4 <- methods::is(y, "numeric")
   if(!((cond1 || cond2) && (cond3 || cond4))){
     stop("x and y should be integer or numeric")
   }
@@ -92,3 +92,6 @@ MLestimates <- function(x){
   sigma <- sqrt(mean((x - mu)^2))
   list(mu = mu, sigma = sigma)
 }
+
+
+

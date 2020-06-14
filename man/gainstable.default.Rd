@@ -4,8 +4,7 @@
 \alias{gainstable.default}
 \title{Gains Table for Binary Classifier}
 \usage{
-\method{gainstable}{default}(score, class, negref = NULL, ngroup = 10,
-  breaks = NULL, ... = NULL)
+\method{gainstable}{default}(score, class, negref = NULL, ngroup = 10, breaks = NULL, ... = NULL)
 }
 \arguments{
 \item{score}{An numeric array of diagnostic score. Same as in

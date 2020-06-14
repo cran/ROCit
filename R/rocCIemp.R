@@ -31,8 +31,8 @@
 
 #' @export
 ciROCemp <- function(rocit_emp, level){
-  argClass <- class(rocit_emp)
-  if(argClass != "rocit"){
+  # argClass <- class(rocit_emp)
+  if(!(methods::is(rocit_emp, "rocit"))){
     stop("Argument is not of class \"rocit\" ")
   }
 

@@ -4,8 +4,15 @@
 \alias{ciAUC.rocit}
 \title{Confidence Interval of AUC}
 \usage{
-\method{ciAUC}{rocit}(object, level = 0.95, delong = FALSE,
-  logit = FALSE, nboot = NULL, ... = NULL)
+\method{ciAUC}{rocit}(
+  object,
+  level = 0.95,
+  delong = FALSE,
+  logit = FALSE,
+  nboot = NULL,
+  step = FALSE,
+  ... = NULL
+)
 }
 \arguments{
 \item{object}{An object of class \code{"rocit"}, returned by
@@ -23,6 +30,8 @@ logit transformed AUC should be evaluated first. Default is \code{FALSE}}
 \item{nboot}{Number of bootstrap samples, if bootstrap method is desired.
 Default is NULL. If a numeric value is specified, overrides
 \code{logit} and \code{delong} arguments.}
+
+\item{step}{Logical, default in \code{FALSE}.  See \code{\link{rocit}}.}
 
 \item{...}{\code{NULL}. Used for S3 generic/method consistency.}
 }

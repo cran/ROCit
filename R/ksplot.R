@@ -28,7 +28,6 @@ ksplot <- function(object,...){
 #' negative curve ($F(c)$) ramps up quickly. The KS statistic is the maximum
 #' difference of $F(c)$ and $G(c)$.
 #'
-#' @import graphics
 #'
 #' @param object An object of class \code{"rocit"}, returned by
 #' \code{\link{rocit}} function.
@@ -63,7 +62,7 @@ ksplot <- function(object,...){
 #' logistic.model <- glm(as.factor(dtest)~chol+age+bmi,
 #'                       data = Diabetes,family = "binomial")
 #' class <- logistic.model$y
-#' score <- logit(logistic.model$fitted.values)
+#' score <- qlogis(logistic.model$fitted.values)
 #' # -------------------------------------------------------------
 #' roc_emp <- rocit(score = score, class = class) # default method empirical
 #' # -------------------------------------------------------------
@@ -125,13 +124,13 @@ ksplot.rocit <- function(object, col=c("#26484F", "#BEBEBE", "#FFA54F"),
     xmin <- min(Cutoff) - 0.1 * xrange
     xmax <- max(Cutoff) + 0.1 * xrange
 
-    plot(F_Ybar~Cutoff, type = "l", col = col[1], lty = lty[1],
+    graphics::plot(F_Ybar~Cutoff, type = "l", col = col[1], lty = lty[1],
          xlim = c(xmin, xmax), ylim = c(0, 1),
          xlab = "", lwd = 2, ylab = "")
-    lines(G_Y ~ Cutoff, lwd = 2, col = col[2], lty = lty[2])
-    grid(col="gray60")
-    abline(v = Cutoff[KSstatIndex], lty = 3)
-    segments(
+    graphics::lines(G_Y ~ Cutoff, lwd = 2, col = col[2], lty = lty[2])
+    graphics::grid(col="gray60")
+    graphics::abline(v = Cutoff[KSstatIndex], lty = 3)
+    graphics::segments(
       x0 = Cutoff[KSstatIndex],
       y0 = G_Y[KSstatIndex],
       x1 = Cutoff[KSstatIndex],
@@ -139,14 +138,14 @@ ksplot.rocit <- function(object, col=c("#26484F", "#BEBEBE", "#FFA54F"),
       lwd = 3,
       col = col[3], lty = lty[3])
 
-    mtext("Cutoff (c)", side = 1, line = 2.5)
-    mtext("G(c) and F(c)", side = 2, line = 2.5)
-    mtext("G: CDF of +ve scores",
+    graphics::mtext("Cutoff (c)", side = 1, line = 2.5)
+    graphics::mtext("G(c) and F(c)", side = 2, line = 2.5)
+    graphics::mtext("G: CDF of +ve scores",
           side = 3, font = 3, line = 1, cex = 0.85)
-    mtext("F: CDF of -ve scores",
+    graphics::mtext("F: CDF of -ve scores",
           side = 3, font = 3, line = 0, cex = 0.85)
     if(legend){
-      legend(legendpos,
+      graphics::legend(legendpos,
              c("F(c)", "G(c)", "KS stat"),
              lwd = 2,
              col = col[1:3], lty = lty[1:3])
@@ -204,13 +203,13 @@ ksplot.rocit <- function(object, col=c("#26484F", "#BEBEBE", "#FFA54F"),
     xmin <- min(Cutoff) - 0.1 * xrange
     xmax <- max(Cutoff) + 0.1 * xrange
 
-    plot(F_Ybar~Cutoff, type = "l", col = col[1], lty = lty[1],
+    graphics::plot(F_Ybar~Cutoff, type = "l", col = col[1], lty = lty[1],
          xlim = c(xmin, xmax), ylim = c(0, 1),
          xlab = "", lwd = 2, ylab = "")
-    lines(G_Y ~ Cutoff, lwd = 2, col = col[2], lty = lty[2])
-    grid(col="gray60")
-    abline(v = Cutoff[KSstatIndex], lty = 3)
-    segments(
+    graphics::lines(G_Y ~ Cutoff, lwd = 2, col = col[2], lty = lty[2])
+    graphics::grid(col="gray60")
+    graphics::abline(v = Cutoff[KSstatIndex], lty = 3)
+    graphics::segments(
       x0 = Cutoff[KSstatIndex],
       y0 = G_Y[KSstatIndex],
       x1 = Cutoff[KSstatIndex],
@@ -218,14 +217,14 @@ ksplot.rocit <- function(object, col=c("#26484F", "#BEBEBE", "#FFA54F"),
       lwd = 3,
       col = col[3], lty = lty[3])
 
-    mtext("Cutoff (c)", side = 1, line = 2.5)
-    mtext("G(c) and F(c)", side = 2, line = 2.5)
-    mtext("G: CDF of +ve scores",
+    graphics::mtext("Cutoff (c)", side = 1, line = 2.5)
+    graphics::mtext("G(c) and F(c)", side = 2, line = 2.5)
+    graphics::mtext("G: CDF of +ve scores",
           side = 3, font = 3, line = 1, cex = 0.85)
-    mtext("F: CDF of -ve scores",
+    graphics::mtext("F: CDF of -ve scores",
           side = 3, font = 3, line = 0, cex = 0.85)
     if(legend){
-      legend(legendpos,
+      graphics::legend(legendpos,
              c("F(c)", "G(c)", "KS stat"),
              lwd = 2,
              col = col[1:3], lty = lty[1:3])
@@ -273,13 +272,13 @@ ksplot.rocit <- function(object, col=c("#26484F", "#BEBEBE", "#FFA54F"),
     xmin <- min(Cutoff) - 0.1 * xrange
     xmax <- max(Cutoff) + 0.1 * xrange
 
-    plot(F_Ybar~Cutoff, type = "l", col = col[1], lty = lty[1],
+    graphics::plot(F_Ybar~Cutoff, type = "l", col = col[1], lty = lty[1],
          xlim = c(xmin, xmax), ylim = c(0, 1),
          xlab = "", lwd = 2, ylab = "")
-    lines(G_Y ~ Cutoff, lwd = 2, col = col[2], lty = lty[2])
-    grid(col="gray60")
-    abline(v = Cutoff[KSstatIndex], lty = 3)
-    segments(
+    graphics::lines(G_Y ~ Cutoff, lwd = 2, col = col[2], lty = lty[2])
+    graphics::grid(col="gray60")
+    graphics::abline(v = Cutoff[KSstatIndex], lty = 3)
+    graphics::segments(
       x0 = Cutoff[KSstatIndex],
       y0 = G_Y[KSstatIndex],
       x1 = Cutoff[KSstatIndex],
@@ -287,14 +286,14 @@ ksplot.rocit <- function(object, col=c("#26484F", "#BEBEBE", "#FFA54F"),
       lwd = 3,
       col = col[3], lty = lty[3])
 
-    mtext("Cutoff (c)", side = 1, line = 2.5)
-    mtext("G(c) and F(c)", side = 2, line = 2.5)
-    mtext("G: CDF of +ve scores",
+    graphics::mtext("Cutoff (c)", side = 1, line = 2.5)
+    graphics::mtext("G(c) and F(c)", side = 2, line = 2.5)
+    graphics::mtext("G: CDF of +ve scores",
           side = 3, font = 3, line = 1, cex = 0.85)
-    mtext("F: CDF of -ve scores",
+    graphics::mtext("F: CDF of -ve scores",
           side = 3, font = 3, line = 0, cex = 0.85)
     if(legend){
-      legend(legendpos,
+      graphics::legend(legendpos,
              c("F(c)", "G(c)", "KS stat"),
              lwd = 2,
              col = col[1:3], lty = lty[1:3])

@@ -10,7 +10,8 @@
 #' is converted to 0 and other is converted to 1. If NULL, reference is
 #' set alphabetically.
 #'
-#' @return A numeric vector of 1 and 0.
+#' @return A numeric vector of 1 and 0. Gives warning if there exists \code{NA}(s)
+#'  in \code{x}.
 #'
 #'
 #'
@@ -32,15 +33,37 @@
 #'
 #' @export
 convertclass <- function(x, reference = NULL){
-  if(length(unique(x)) != 2){
-    stop("class must have exactly two unique values")
+  if(any(is.na(x))){
+    warning("NA(s) in the input data")
+    na_index <- which(is.na(x))
+    y <- x[-na_index]
+    if(length(unique(y)) != 2){
+      stop("class must have exactly two unique values")
+    }
+
+    levs <- levels(factor(y))
+    if(!is.null(reference)){
+      if (!(reference %in% levs)){
+        stop("Provided reference class is not valid")
+      }
+    }else{
+      reference <- levs[1]
+    }
+    return(ifelse(is.na(x), NA, ifelse(x == reference, 0, 1)))
   }
-  if(!is.null(reference)){
+  else{
+    if(length(unique(x)) != 2){
+      stop("class must have exactly two unique values")
+    }
+    levs <- levels(factor(x))
+    if(!is.null(reference)){
+      if (!(reference %in% levs)){
+        stop("Provided reference class is not valid")
+      }
+    }else{
+      reference <- levs[1]
+    }
     return(ifelse(x == reference, 0, 1))
-  }else{
-    x <- as.factor(x)
-    ref <- levels(x)[1]
-    return(ifelse(x==ref, 0, 1))
   }
 }
 

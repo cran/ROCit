@@ -4,9 +4,15 @@
 \alias{ksplot.rocit}
 \title{KS Plot}
 \usage{
-\method{ksplot}{rocit}(object, col = c("#26484F", "#BEBEBE", "#FFA54F"),
-  lty = c(1, 1, 1), legend = T, legendpos = "bottomright",
-  values = T, ... = NULL)
+\method{ksplot}{rocit}(
+  object,
+  col = c("#26484F", "#BEBEBE", "#FFA54F"),
+  lty = c(1, 1, 1),
+  legend = T,
+  legendpos = "bottomright",
+  values = T,
+  ... = NULL
+)
 }
 \arguments{
 \item{object}{An object of class \code{"rocit"}, returned by
@@ -56,7 +62,7 @@ data("Diabetes")
 logistic.model <- glm(as.factor(dtest)~chol+age+bmi,
                       data = Diabetes,family = "binomial")
 class <- logistic.model$y
-score <- logit(logistic.model$fitted.values)
+score <- qlogis(logistic.model$fitted.values)
 # -------------------------------------------------------------
 roc_emp <- rocit(score = score, class = class) # default method empirical
 # -------------------------------------------------------------

@@ -1,14 +1,11 @@
-ROCit 1.1.1
+ROCit 2.1.1
 =====
 
-Author
-=======
+* Logical argument `step` has been added in `rocit`, `measureit` and `ciAUC`.
 
-Md Riaz Ahmed Khan `mdriazahmed.khan@jacks.sdstate.edu`
-Thomas Brandenburger, PhD `thomas.brandenburger@sdstate.edu`
+* `print` method added for `rocit` and `rocci` objects.
 
+* Function `gettptnfpfn` has been removed.
 
-Maintainer
-===============
-Md Riaz Ahmed Khan `mdriazahmed.khan@jacks.sdstate.edu`
+* Functions `logit` and `invlogit` have been deprecated.
 
