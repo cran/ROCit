@@ -9,3 +9,10 @@ ROCit 2.1.1
 
 * Functions `logit` and `invlogit` have been deprecated.
 
+
+
+ROCit 2.1.2
+=====
+* Bug fixed for gettptnfpfn defunc.
+
+

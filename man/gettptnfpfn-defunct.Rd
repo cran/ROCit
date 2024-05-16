@@ -3,9 +3,6 @@
 \name{gettptnfpfn-defunct}
 \alias{gettptnfpfn-defunct}
 \title{Get number of TP, FP, TN and FN}
-\usage{
-gettptnfpfn(x, depth, npos = sum(x), nneg = length(x) - npos)
-}
 \arguments{
 \item{x}{A response vector, consisting of only 1's and 0's.}
 

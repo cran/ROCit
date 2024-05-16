@@ -1,8 +1,4 @@
 
-
-
-
-
 #' @title Get number of TP, FP, TN and FN
 #'
 #'
@@ -28,7 +24,7 @@
 #' respectively.
 #'
 #' @name gettptnfpfn-defunct
-#' @usage gettptnfpfn(x, depth, npos = sum(x), nneg = length(x) - npos)
+
 #' @seealso \code{\link{ROCit-defunct}}
 #' @keywords internal
 NULL

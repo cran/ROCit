@@ -46,9 +46,7 @@
 #'  }
 #'
 #' @note The last three variables (\code{bmi}, \code{dtest}, \code{whr})
-#' were created. For \code{bmi}, following
-#' \href{http://www.cdc.gov/healthyweight/assessing/bmi/childrens_bmi/childrens_bmi_formula.html}{formula}
-#' was used:
+#' were created. For \code{bmi}, following formula was used:
 #' \deqn{bmi = 703 * (weight_lbs) / (height_inches)^2}
 #'
 #'

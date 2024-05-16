@@ -1,5 +1,5 @@
 
-ROCit 2.1.1
+ROCit 2.1.2
 =====
 
 Author
